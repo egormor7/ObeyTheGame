@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.4" tiledversion="1.4.3" orientation="orthogonal" renderorder="right-down" width="100" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="5" nextobjectid="4">
+ <tileset firstgid="1" source="tileset_gutter.tsx"/>
+ <tileset firstgid="271" source="textures.tsx"/>
+ <layer id="1" name="background" width="100" height="20">
+  <data encoding="base64" compression="zlib">
+   eJztwQEBAAAAgJD+r+4ICgAAAAAAAAAYH0AAAQ==
+  </data>
+ </layer>
+ <layer id="2" name="graphics" width="100" height="20">
+  <data encoding="base64" compression="zlib">
+   eJzt1kEKgCAURVEX1qaCoHk7CNpnWwgHHzScJNZ7xD3gwJl4kW9KAACMt03qE+COJl7o4eVpj3l55xzoc640cRNN6OKDd6KTZ0w5Z2Kfm+B70SI68CfTKRvQQqPVgC563D3+bBcv1A7xQo0eXi7411d2
+  </data>
+ </layer>
+ <objectgroup id="3" name="floor">
+  <object id="1" x="0" y="544" width="1024"/>
+  <object id="2" x="1024" y="544" height="96"/>
+  <object id="3" x="0" y="544" width="1024" height="96"/>
+ </objectgroup>
+ <objectgroup id="4" name="laser"/>
+</map>
