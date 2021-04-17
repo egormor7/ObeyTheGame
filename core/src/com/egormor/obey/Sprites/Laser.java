@@ -11,5 +11,11 @@ import com.egormor.obey.OBEY;
 public class Laser extends InteractiveTileObject{
     public Laser(World world, TiledMap map, Rectangle bounds){
         super(world, map, bounds);
+        fixture.setUserData(this);
+    }
+
+    @Override
+    public void onHandHit() {
+
     }
 }

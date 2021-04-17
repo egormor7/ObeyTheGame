@@ -9,9 +9,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.egormor.obey.Screens.PlayScreen;
 
 public class OBEY extends Game {
-	public static final int V_WIDTH = 700;
+	public static final int V_WIDTH = 500;
 	public static final int V_HEIGHT = 308;
-	public static final float PPM = 100;
+	public static final float PPM = 50;
 
 	public SpriteBatch batch;
 

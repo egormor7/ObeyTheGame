@@ -28,6 +28,7 @@ import com.egormor.obey.OBEY;
 import com.egormor.obey.Scenes.Hud;
 import com.egormor.obey.Sprites.MainCharacter;
 import com.egormor.obey.Tools.B2WorldCreator;
+import com.egormor.obey.Tools.WorldContactListener;
 
 public class PlayScreen implements Screen {
     private OBEY game;
@@ -58,16 +59,19 @@ public class PlayScreen implements Screen {
         //Gdx.files.internal("/android/assets");
 
         maploader = new TmxMapLoader();
-        map = maploader.load("first_level_test_3.tmx");
+        map = maploader.load("first_level_test_4.tmx");
         renderer = new OrthogonalTiledMapRenderer(map, 1 / OBEY.PPM);
         gamecam.position.set(gamePort.getWorldWidth() / 2, gamePort.getWorldHeight() / 2, 0);
 
-        world = new World(new Vector2(0, -10), true);
+        world = new World(new Vector2(0, -20), true);
         b2dr = new Box2DDebugRenderer();
 
         player = new MainCharacter(world, this);
 
         new B2WorldCreator(world, map);
+
+        world.setContactListener(new WorldContactListener());
+
 
     }
 
@@ -82,14 +86,20 @@ public class PlayScreen implements Screen {
     }
 
     public void handleInput(float dt){
-        if (Gdx.input.isKeyPressed(Input.Keys.UP) && player.b2body.getLinearVelocity().y <= 2)
-            player.b2body.applyLinearImpulse(new Vector2(0, 0.5f), player.b2body.getWorldCenter(), true);
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && player.b2body.getLinearVelocity().x <= 2)
+        if (Gdx.input.isKeyPressed(Input.Keys.UP) && player.b2body.getLinearVelocity().y == 0)
+            player.b2body.applyLinearImpulse(new Vector2(0, 10), player.b2body.getWorldCenter(), true);
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && player.b2body.getLinearVelocity().x <= 6)
             player.b2body.applyLinearImpulse(new Vector2(0.1f, 0), player.b2body.getWorldCenter(), true);
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && player.b2body.getLinearVelocity().x >= -2)
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && player.b2body.getLinearVelocity().x >= -6)
             player.b2body.applyLinearImpulse(new Vector2(-0.1f, 0), player.b2body.getWorldCenter(), true);
-        if (Gdx.input.isKeyPressed(Input.Keys.SPACE))
+        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
             world.setGravity(new Vector2(world.getGravity().x, world.getGravity().y * -1));
+            player.b2body.applyLinearImpulse(new Vector2(0, 1), player.b2body.getWorldCenter(), true);
+            if (world.getGravity().y < 0)
+                player.fallingDown = true;
+            else
+                player.fallingDown = false;
+        }
         else if (Gdx.input.isKeyPressed(Input.Keys.W))
             gamecam.position.y += 10 * dt;
         else if (Gdx.input.isKeyPressed(Input.Keys.A))
