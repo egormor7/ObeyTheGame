@@ -12,6 +12,7 @@ public class Laser extends InteractiveTileObject{
     public Laser(World world, TiledMap map, Rectangle bounds){
         super(world, map, bounds);
         fixture.setUserData(this);
+        setCategoryFilter(OBEY.LASER_BIT);
     }
 
     @Override

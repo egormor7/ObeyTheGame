@@ -49,6 +49,8 @@ public class PlayScreen implements Screen {
 
     private MainCharacter player;
 
+    private float TimeOfLastSpacePress = 0;
+
     public  PlayScreen(OBEY game){
         atlas = new TextureAtlas("MainHero.pack");
 
@@ -88,17 +90,24 @@ public class PlayScreen implements Screen {
     public void handleInput(float dt){
         if (Gdx.input.isKeyPressed(Input.Keys.UP) && player.b2body.getLinearVelocity().y == 0)
             player.b2body.applyLinearImpulse(new Vector2(0, 10), player.b2body.getWorldCenter(), true);
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN) && player.b2body.getLinearVelocity().y == 0)
+            player.b2body.applyLinearImpulse(new Vector2(0, -10), player.b2body.getWorldCenter(), true);
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && player.b2body.getLinearVelocity().x <= 6)
             player.b2body.applyLinearImpulse(new Vector2(0.1f, 0), player.b2body.getWorldCenter(), true);
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && player.b2body.getLinearVelocity().x >= -6)
             player.b2body.applyLinearImpulse(new Vector2(-0.1f, 0), player.b2body.getWorldCenter(), true);
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-            world.setGravity(new Vector2(world.getGravity().x, world.getGravity().y * -1));
-            player.b2body.applyLinearImpulse(new Vector2(0, 1), player.b2body.getWorldCenter(), true);
-            if (world.getGravity().y < 0)
-                player.fallingDown = true;
-            else
-                player.fallingDown = false;
+            Gdx.app.log("Space", "Before: " + TimeOfLastSpacePress + " After: " + hud.getWorldTimer());
+            if (TimeOfLastSpacePress == 0 || ((TimeOfLastSpacePress - hud.getWorldTimer()) >= 1)) {
+                Gdx.app.log("Space", "Pressed");
+                world.setGravity(new Vector2(world.getGravity().x, world.getGravity().y * -1));
+                player.b2body.applyLinearImpulse(new Vector2(0, 1), player.b2body.getWorldCenter(), true);
+                if (world.getGravity().y <= 0)
+                    player.fallingDown = true;
+                else
+                    player.fallingDown = false;
+                TimeOfLastSpacePress = hud.getWorldTimer();
+            }
         }
         else if (Gdx.input.isKeyPressed(Input.Keys.W))
             gamecam.position.y += 10 * dt;
@@ -117,6 +126,7 @@ public class PlayScreen implements Screen {
         world.step(1/60f, 6, 2);
 
         player.update(dt);
+        hud.update(dt);
 
         gamecam.position.x = player.b2body.getPosition().x;
         gamecam.position.y = player.b2body.getPosition().y;

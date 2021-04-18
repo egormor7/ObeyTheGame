@@ -121,6 +121,8 @@ public class MainCharacter extends Sprite {
         //shape.
         //shape.setAsBox(300 / OBEY.PPM + 22,230 / OBEY.PPM + 32);
         //shape.setRadius(20 / OBEY.PPM);
+        fdef.filter.categoryBits = OBEY.MAIN_CHARACTER_BIT;
+        fdef.filter.maskBits = OBEY.DEFAULT_BIT | OBEY.BRICK_BIT | OBEY.LASER_BIT;
 
         fdef.shape = shape;
         b2body.createFixture(fdef);
