@@ -3,6 +3,7 @@ package com.egormor.obey.Screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -49,6 +50,8 @@ public class PlayScreen implements Screen {
 
     private MainCharacter player;
 
+    private Music music;
+
     private float TimeOfLastSpacePress = 0;
 
     public  PlayScreen(OBEY game){
@@ -74,6 +77,9 @@ public class PlayScreen implements Screen {
 
         world.setContactListener(new WorldContactListener());
 
+        music = OBEY.manager.get(OBEY.MUSIC_PATH, Music.class);
+        music.setLooping(true);
+        music.play();
 
     }
 
@@ -102,10 +108,7 @@ public class PlayScreen implements Screen {
                 Gdx.app.log("Space", "Pressed");
                 world.setGravity(new Vector2(world.getGravity().x, world.getGravity().y * -1));
                 player.b2body.applyLinearImpulse(new Vector2(0, 1), player.b2body.getWorldCenter(), true);
-                if (world.getGravity().y <= 0)
-                    player.fallingDown = true;
-                else
-                    player.fallingDown = false;
+                player.fallingDown = world.getGravity().y <= 0;
                 TimeOfLastSpacePress = hud.getWorldTimer();
             }
         }

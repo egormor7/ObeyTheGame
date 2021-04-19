@@ -1,6 +1,7 @@
 package com.egormor.obey.Sprites;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
 import com.badlogic.gdx.math.Rectangle;
@@ -23,6 +24,6 @@ public class Brick extends InteractiveTileObject{
         setCategoryFilter(OBEY.DESTROYED_BIT);
         deleteCells();
         Hud.addScore(200);
-        //getCell().setTile(null);
+        OBEY.manager.get(OBEY.SOUND_BREAK_BLOCK_PATH, Sound.class).play();
     }
 }
