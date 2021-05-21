@@ -8,11 +8,12 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.World;
 import com.egormor.obey.OBEY;
 import com.egormor.obey.Scenes.Hud;
+import com.egormor.obey.Screens.PlayScreen;
 
 public class Brick extends InteractiveTileObject{
     //private static TiledMapTileSet tileSet;
-    public Brick(World world, TiledMap map, Rectangle bounds){
-        super(world, map, bounds);
+    public Brick(PlayScreen screen, Rectangle bounds){
+        super(screen, bounds);
         //tileSet = map.getTileSets().getTileSet("texture");
         fixture.setUserData(this);
         setCategoryFilter(OBEY.BRICK_BIT);

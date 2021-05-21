@@ -27,9 +27,9 @@ public class MainCharacter extends Sprite {
     private float stateTimer;
     public boolean runningRight, fallingDown;
 
-    public MainCharacter(World world, PlayScreen screen){
+    public MainCharacter(PlayScreen screen){
         super(screen.getAtlas().findRegion("sprites"));
-        this.world = world;
+        this.world = screen.getWorld();
         currentState = State.STANDING;
         previousState = State.STANDING;
         stateTimer = 0;
@@ -39,12 +39,12 @@ public class MainCharacter extends Sprite {
         Array<TextureRegion> frames = new Array<TextureRegion>();
         // Same for other movements
         for(int i = 0;i < 10; i++)
-            frames.add(new TextureRegion(getTexture(), 58 + i * 46, 14, 44, 65));
+            frames.add(new TextureRegion(getTexture(), 12 + i * 46, 28, 45, 65));
         mainCharacterRun = new Animation<TextureRegion>(0.1f, frames);
         frames.clear();
 
         defineMainCharacter();
-        mainCharacterStand = new TextureRegion(getTexture(), 12, 14, 44, 65);
+        mainCharacterStand = new TextureRegion(getTexture(), 12, 28, 45, 65);
         setBounds(0, 0, 44 / OBEY.PPM, 65 / OBEY.PPM);
         setRegion(mainCharacterStand);
     }
@@ -113,16 +113,13 @@ public class MainCharacter extends Sprite {
 
         FixtureDef fdef = new FixtureDef();
         PolygonShape shape = new PolygonShape();
-        //CircleShape shape = new CircleShape();
         shape.set(new Vector2[]{new Vector2(-22 / OBEY.PPM, 33 / OBEY.PPM),
                 new Vector2(22 / OBEY.PPM, 33 / OBEY.PPM),
                 new Vector2(22 / OBEY.PPM, -33 / OBEY.PPM),
                 new Vector2(-22 / OBEY.PPM, -33 / OBEY.PPM)});
-        //shape.
-        //shape.setAsBox(300 / OBEY.PPM + 22,230 / OBEY.PPM + 32);
-        //shape.setRadius(20 / OBEY.PPM);
+
         fdef.filter.categoryBits = OBEY.MAIN_CHARACTER_BIT;
-        fdef.filter.maskBits = OBEY.DEFAULT_BIT | OBEY.BRICK_BIT | OBEY.LASER_BIT;
+        fdef.filter.maskBits = OBEY.GROUND_BIT | OBEY.BRICK_BIT | OBEY.LASER_BIT | OBEY.OBJECT_BIT | OBEY.ENEMY_BIT;
 
         fdef.shape = shape;
         b2body.createFixture(fdef);
