@@ -16,7 +16,9 @@ import com.egormor.obey.Screens.PlayScreen;
 public class OBEY extends Game {
 	public static final int V_WIDTH = 1000;
 	public static final int V_HEIGHT = 600;
-	public static final float PPM = 50;
+    public static final int MENU_WIDTH = 2560;
+    public static final int MENU_HEIGHT = 1440;
+	public static final float PPM = 5;
 	public static final float TILE_SIZE = 5;
 
 	public static final short GROUND_BIT = 1;
