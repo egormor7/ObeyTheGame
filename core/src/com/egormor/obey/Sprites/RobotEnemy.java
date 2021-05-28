@@ -15,8 +15,14 @@ public class RobotEnemy extends Enemy{
     private Animation<TextureRegion> walkAnimation;
     private Array<TextureRegion> frames;
 
+    public boolean runningRight, fallingDown;
+
     public RobotEnemy(PlayScreen screen, float x, float y) {
         super(screen, x, y);
+
+        runningRight = true;
+        fallingDown = true;
+
         frames = new Array<TextureRegion>();
         for (int i = 0;i<7;i++)
             frames.add(new TextureRegion(screen.getAtlas().findRegion("robotEnemy_sprite"), 2 + i * 28, 2, 24, 86));  //robotEnemy_sprite

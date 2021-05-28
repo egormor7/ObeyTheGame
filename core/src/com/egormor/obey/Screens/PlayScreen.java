@@ -21,6 +21,7 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
@@ -61,7 +62,7 @@ public class PlayScreen implements Screen {
 
         this.game = game;
         gamecam = new OrthographicCamera();
-        gamePort = new FitViewport(OBEY.V_WIDTH / OBEY.PPM, OBEY.V_HEIGHT / OBEY.PPM, gamecam);
+        gamePort = new FillViewport(OBEY.V_WIDTH / OBEY.PPM, OBEY.V_HEIGHT / OBEY.PPM, gamecam);
         hud = new Hud(game.batch);
         //Gdx.files.internal("/android/assets");
 
@@ -100,17 +101,17 @@ public class PlayScreen implements Screen {
     public void handleInput(float dt){
 
         if (Gdx.input.isKeyPressed(Input.Keys.UP) && player.b2body.getLinearVelocity().y == 0)
-            player.b2body.applyLinearImpulse(new Vector2(0, 10), player.b2body.getWorldCenter(), true);
+            player.b2body.applyLinearImpulse(new Vector2(0, 40), player.b2body.getWorldCenter(), true);
         if (Gdx.input.isKeyPressed(Input.Keys.DOWN) && player.b2body.getLinearVelocity().y == 0)
-            player.b2body.applyLinearImpulse(new Vector2(0, -10), player.b2body.getWorldCenter(), true);
+            player.b2body.applyLinearImpulse(new Vector2(0, -40), player.b2body.getWorldCenter(), true);
         if (((Gdx.input.isTouched() && (Gdx.input.getX() > Gdx.graphics.getWidth() / 2)) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)) && player.b2body.getLinearVelocity().x <= 6) {
 
-            player.b2body.applyLinearImpulse(new Vector2(0.2f, 0), player.b2body.getWorldCenter(), true);
+            player.b2body.applyLinearImpulse(new Vector2(1.8f, 0), player.b2body.getWorldCenter(), true);
             Gdx.app.log("Touch at x:", Float.toString(Gdx.input.getX()));
             Gdx.app.log("Cam at x:", Float.toString(Gdx.graphics.getWidth()));
         }
         if (((Gdx.input.isTouched() && (Gdx.input.getX() < Gdx.graphics.getWidth() / 2)) || Gdx.input.isKeyPressed(Input.Keys.LEFT)) && player.b2body.getLinearVelocity().x >= -6)
-            player.b2body.applyLinearImpulse(new Vector2(-0.2f, 0), player.b2body.getWorldCenter(), true);
+            player.b2body.applyLinearImpulse(new Vector2(-1.8f, 0), player.b2body.getWorldCenter(), true);
         if ((Gdx.input.isTouched() && (((Gdx.input.getDeltaY() < (Gdx.graphics.getHeight() / 25)) && (world.getGravity().y <= 0)) || ((Gdx.input.getDeltaY() > (Gdx.graphics.getHeight() / 25)) && (world.getGravity().y >= 0)))) || Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
             Gdx.app.log("Space", "Before: " + TimeOfLastSpacePress + " After: " + hud.getWorldTimer());
             if (TimeOfLastSpacePress == 0 || ((TimeOfLastSpacePress - hud.getWorldTimer()) >= 1)) {
@@ -136,7 +137,7 @@ public class PlayScreen implements Screen {
     public void update(float dt){
         handleInput(dt);
 
-        world.step(1/60f, 6, 2);
+        world.step(1/30f, 6, 2);
 
         player.update(dt);
         robotEnemy.update(dt);
