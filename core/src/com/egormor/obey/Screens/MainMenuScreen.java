@@ -31,6 +31,7 @@ import java.util.Locale;
 
 public class MainMenuScreen implements Screen {
     private OBEY game;
+
     //OrthographicCamera camera;
 
     private OrthographicCamera gamecam;
@@ -51,6 +52,7 @@ public class MainMenuScreen implements Screen {
 
     public MainMenuScreen(OBEY game) {
         this.game = game;
+
         gamecam = new OrthographicCamera();
         gamePort = new FillViewport(OBEY.MENU_WIDTH / OBEY.PPM, OBEY.MENU_HEIGHT / OBEY.PPM, gamecam); //(OBEY.V_WIDTH / OBEY.PPM, OBEY.V_HEIGHT / OBEY.PPM, gamecam);
 

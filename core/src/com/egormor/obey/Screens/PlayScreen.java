@@ -21,6 +21,7 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -52,6 +53,10 @@ public class PlayScreen implements Screen {
 
     private MainCharacter player;
     private RobotEnemy robotEnemy;
+    private Array<RobotEnemy> robotEnemyArray;
+    private final static float[] robotEnemy_x_cords = {323, 110};
+    private final static float[] robotEnemy_y_cords = {110, 110};
+
 
     private Music music;
 
@@ -67,11 +72,11 @@ public class PlayScreen implements Screen {
         //Gdx.files.internal("/android/assets");
 
         maploader = new TmxMapLoader();
-        map = maploader.load("first_level_test_4.tmx");
+        map = maploader.load("first_level_test_5.tmx");
         renderer = new OrthogonalTiledMapRenderer(map, 1 / OBEY.PPM);
         gamecam.position.set(gamePort.getWorldWidth() / 2, gamePort.getWorldHeight() / 2, 0);
 
-        world = new World(new Vector2(0, -20), true);
+        world = new World(new Vector2(0, -40), true);
         b2dr = new Box2DDebugRenderer();
 
         player = new MainCharacter(this);
@@ -84,8 +89,12 @@ public class PlayScreen implements Screen {
         music.setLooping(true);
         music.play();
 
-        robotEnemy = new RobotEnemy(this, .32f, .32f);
-
+        robotEnemyArray = new Array<>();
+        for (int i = 0; i < robotEnemy_x_cords.length; i++) {
+            //robotEnemy = new RobotEnemy(this, .32f, .32f, robotEnemy_x_cords[i], robotEnemy_y_cords[i]);
+            robotEnemy = new RobotEnemy(this, robotEnemy_x_cords[i], robotEnemy_y_cords[i], robotEnemy_x_cords[i], robotEnemy_y_cords[i]);
+            robotEnemyArray.add(robotEnemy);
+        }
     }
 
     public TextureAtlas getAtlas(){
@@ -101,17 +110,17 @@ public class PlayScreen implements Screen {
     public void handleInput(float dt){
 
         if (Gdx.input.isKeyPressed(Input.Keys.UP) && player.b2body.getLinearVelocity().y == 0)
-            player.b2body.applyLinearImpulse(new Vector2(0, 40), player.b2body.getWorldCenter(), true);
+            player.b2body.applyLinearImpulse(new Vector2(0, 80), player.b2body.getWorldCenter(), true);
         if (Gdx.input.isKeyPressed(Input.Keys.DOWN) && player.b2body.getLinearVelocity().y == 0)
-            player.b2body.applyLinearImpulse(new Vector2(0, -40), player.b2body.getWorldCenter(), true);
+            player.b2body.applyLinearImpulse(new Vector2(0, -80), player.b2body.getWorldCenter(), true);
         if (((Gdx.input.isTouched() && (Gdx.input.getX() > Gdx.graphics.getWidth() / 2)) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)) && player.b2body.getLinearVelocity().x <= 6) {
 
-            player.b2body.applyLinearImpulse(new Vector2(1.8f, 0), player.b2body.getWorldCenter(), true);
+            player.b2body.applyLinearImpulse(new Vector2(10.8f, 0), player.b2body.getWorldCenter(), true);
             Gdx.app.log("Touch at x:", Float.toString(Gdx.input.getX()));
             Gdx.app.log("Cam at x:", Float.toString(Gdx.graphics.getWidth()));
         }
         if (((Gdx.input.isTouched() && (Gdx.input.getX() < Gdx.graphics.getWidth() / 2)) || Gdx.input.isKeyPressed(Input.Keys.LEFT)) && player.b2body.getLinearVelocity().x >= -6)
-            player.b2body.applyLinearImpulse(new Vector2(-1.8f, 0), player.b2body.getWorldCenter(), true);
+            player.b2body.applyLinearImpulse(new Vector2(-10.8f, 0), player.b2body.getWorldCenter(), true);
         if ((Gdx.input.isTouched() && (((Gdx.input.getDeltaY() < (Gdx.graphics.getHeight() / 25)) && (world.getGravity().y <= 0)) || ((Gdx.input.getDeltaY() > (Gdx.graphics.getHeight() / 25)) && (world.getGravity().y >= 0)))) || Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
             Gdx.app.log("Space", "Before: " + TimeOfLastSpacePress + " After: " + hud.getWorldTimer());
             if (TimeOfLastSpacePress == 0 || ((TimeOfLastSpacePress - hud.getWorldTimer()) >= 1)) {
@@ -120,6 +129,12 @@ public class PlayScreen implements Screen {
                 world.setGravity(new Vector2(world.getGravity().x, world.getGravity().y * -1));
                 player.b2body.applyLinearImpulse(new Vector2(0, 1), player.b2body.getWorldCenter(), true);
                 player.fallingDown = world.getGravity().y <= 0;
+
+                for (int i = 0; i < robotEnemy_x_cords.length; i++) {
+                    robotEnemyArray.get(i).fallingDown = world.getGravity().y <= 0;
+                }
+
+                //robotEnemy.fallingDown = world.getGravity().y <= 0;
                 TimeOfLastSpacePress = hud.getWorldTimer();
             }
         }
@@ -140,7 +155,12 @@ public class PlayScreen implements Screen {
         world.step(1/30f, 6, 2);
 
         player.update(dt);
-        robotEnemy.update(dt);
+
+        for (int i = 0; i < robotEnemy_x_cords.length; i++) {
+            robotEnemyArray.get(i).update(dt);
+        }
+
+        //robotEnemy.update(dt);
         hud.update(dt);
 
         gamecam.position.x = player.b2body.getPosition().x;
@@ -166,11 +186,24 @@ public class PlayScreen implements Screen {
         game.batch.setProjectionMatrix(gamecam.combined);
         game.batch.begin();
         player.draw(game.batch);
-        robotEnemy.draw(game.batch);
+
+        for (int i = 0; i < robotEnemy_x_cords.length; i++) {
+            robotEnemyArray.get(i).draw(game.batch);
+        }
+
+        //robotEnemy.draw(game.batch);
         game.batch.end();
 
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         hud.stage.draw();
+    }
+
+    public float getPlayerX(){
+        return player.getX();
+    }
+
+    public float getPlayerY(){
+        return player.getY();
     }
 
     @Override

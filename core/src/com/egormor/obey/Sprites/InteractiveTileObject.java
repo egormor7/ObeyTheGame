@@ -53,21 +53,41 @@ public abstract class InteractiveTileObject {
 
     public void deleteCells(){
         TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get(1);
+        Gdx.app.log(" " + layer.getWidth(), " " + layer.getHeight());
+
+        /*for (int i = 0;i < 1641; i++){
+            for (int j = 0;j<480;j++){
+                TiledMapTileLayer.Cell a = layer.getCell(i, j);
+                if (!(a == null)){
+                    Gdx.app.log(" ffff" + i, " " + j);
+                    //a.setTile(null);
+                    //a.setTile(null);
+                }
+            }
+        }*/
+        Gdx.app.log("" + (int)(body.getPosition().x * OBEY.PPM / OBEY.TILE_SIZE - bounds.getWidth() / OBEY.TILE_SIZE / 2) + " " + (int)(body.getPosition().x * OBEY.PPM / OBEY.TILE_SIZE + bounds.getWidth() / OBEY.TILE_SIZE / 2), "" + (int)(body.getPosition().y * OBEY.PPM / OBEY.TILE_SIZE - bounds.getHeight() / OBEY.TILE_SIZE / 2) + " " + (int)(body.getPosition().y * OBEY.PPM / OBEY.TILE_SIZE + bounds.getHeight() / OBEY.TILE_SIZE / 2));
         for (int i = (int)(body.getPosition().x * OBEY.PPM / OBEY.TILE_SIZE - bounds.getWidth() / OBEY.TILE_SIZE / 2);
              i<=(int)(body.getPosition().x * OBEY.PPM / OBEY.TILE_SIZE + bounds.getWidth() / OBEY.TILE_SIZE / 2); i++){
             for (int j = (int)(body.getPosition().y * OBEY.PPM / OBEY.TILE_SIZE - bounds.getHeight() / OBEY.TILE_SIZE / 2);
-            j<=(int)(body.getPosition().y * OBEY.PPM / OBEY.TILE_SIZE + bounds.getHeight() / OBEY.TILE_SIZE / 2);j++) {
-                Gdx.app.log("Brick " + i, "Collision " + j);
-                layer.getCell(i, j).setTile(null);
+                 j<=(int)(body.getPosition().y * OBEY.PPM / OBEY.TILE_SIZE + bounds.getHeight() / OBEY.TILE_SIZE / 2);j++) {
+                //Gdx.app.log("Brick " + i, "Collision " + j);
+                //layer.getCell(i, j).setTile(null);
+                //layer.getCell(348, 370).setTile(null);
+                //TiledMapTileLayer.Cell a = layer.getCell(i, layer.getHeight() - j);
+                TiledMapTileLayer.Cell a = layer.getCell(i, j);
+                if (!(a == null)){
+                    //Gdx.app.log(" ffff" + i, " " + j);
+                    a.setTile(null);
+                    }
+                //Gdx.app.log(" " + i, " " + j);
 
             }
         }
     }
-
-    public TiledMapTileLayer.Cell getCell(){
+    /*public TiledMapTileLayer.Cell getCell(){
         TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get(1);
         //Gdx.app.log("Brick", "Collision");
         return layer.getCell((int)(body.getPosition().x * OBEY.PPM / OBEY.TILE_SIZE),
                 (int)(body.getPosition().y * OBEY.PPM / OBEY.TILE_SIZE));
-    }
+    }*/
 }
