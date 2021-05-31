@@ -6,6 +6,7 @@ import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
+import com.egormor.obey.Sprites.Enemy;
 import com.egormor.obey.Sprites.InteractiveTileObject;
 
 public class WorldContactListener implements ContactListener {
@@ -28,6 +29,9 @@ public class WorldContactListener implements ContactListener {
 
             if (object.getUserData() != null && InteractiveTileObject.class.isAssignableFrom(object.getUserData().getClass())){
                 ((InteractiveTileObject) object.getUserData()).onHandHit();
+            }
+            if (object.getUserData() != null && Enemy.class.isAssignableFrom(object.getUserData().getClass())){
+                ((Enemy) object.getUserData()).onHandHit();
             }
         }
     }

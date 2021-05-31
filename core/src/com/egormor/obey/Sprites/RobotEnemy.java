@@ -1,5 +1,7 @@
 package com.egormor.obey.Sprites;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -128,6 +130,17 @@ public class RobotEnemy extends Enemy{
         fdef.filter.maskBits = OBEY.GROUND_BIT | OBEY.BRICK_BIT | OBEY.LASER_BIT | OBEY.ENEMY_BIT | OBEY.OBJECT_BIT | OBEY.MAIN_CHARACTER_BIT;
 
         fdef.shape = shape;
-        b2body.createFixture(fdef);
+        b2body.createFixture(fdef).setUserData(this);
+    }
+
+
+    @Override
+    public void onHandHit() {
+        Gdx.app.log("Enemy", "Collision");
+        screen.game_over = true;
+        //setCategoryFilter(OBEY.DESTROYED_BIT);
+        //deleteCells();
+        //Hud.addScore(200);
+        //OBEY.manager.get(OBEY.SOUND_BREAK_BLOCK_PATH, Sound.class).play();
     }
 }

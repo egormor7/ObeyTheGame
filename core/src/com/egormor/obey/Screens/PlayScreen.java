@@ -154,7 +154,7 @@ public class PlayScreen implements Screen {
             player.b2body.applyLinearImpulse(new Vector2(-10.8f, 0), player.b2body.getWorldCenter(), true);
         if ((Gdx.input.isTouched() && (((Gdx.input.getDeltaY() < (Gdx.graphics.getHeight() / 25)) && (world.getGravity().y <= 0)) || ((Gdx.input.getDeltaY() > (Gdx.graphics.getHeight() / 25)) && (world.getGravity().y >= 0)))) || Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
             Gdx.app.log("Space", "Before: " + TimeOfLastSpacePress + " After: " + hud.getWorldTimer());
-            if (TimeOfLastSpacePress == 0 || ((-TimeOfLastSpacePress + hud.getWorldTimer()) >= 1)) {
+            if (TimeOfLastSpacePress == 0 || ((-TimeOfLastSpacePress + hud.getWorldTimer()) >= 50)) {
                 Gdx.app.log("Space", "Pressed");
 
                 world.setGravity(new Vector2(world.getGravity().x, world.getGravity().y * -1));
@@ -243,12 +243,12 @@ public class PlayScreen implements Screen {
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         hud.stage.draw();
 
-        game.batch.begin();
+        /*game.batch.begin();
         game.batch.draw(hud.getPauseMenuTexture(), (float)140, Gdx.graphics.getHeight() - 140);
         //Gdx.app.log("" + Gdx.graphics.getWidth() , "" + Gdx.graphics.getHeight());
 
         game.batch.draw(pause_button_texture, 410, 540);
-        game.batch.end();
+        game.batch.end();*/
     }
 
     public float getPlayerX(){

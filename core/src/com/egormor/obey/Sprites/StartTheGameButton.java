@@ -1,4 +1,4 @@
-package com.egormor.obey.Sprites;
+/*package com.egormor.obey.Sprites;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
@@ -24,7 +24,7 @@ public class StartTheGameButton extends InteractiveTileObject{
         Gdx.app.log("StartTheGameButton", "Collision");
         setCategoryFilter(OBEY.DESTROYED_BIT);
         deleteCells();
-        Hud.addScore(200);
+        //Hud.addScore(200);
         OBEY.manager.get(OBEY.SOUND_BREAK_BLOCK_PATH, Sound.class).play();
     }
-}
+}*/

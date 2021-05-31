@@ -25,7 +25,7 @@ public class Hud implements Disposable {
     private float timeCount;
     private static Integer score;
 
-    private Label countdownLabel;
+    /*private Label countdownLabel;
     private static Label scoreLabel;
     private Label timeLabel;
     private Label levelLabel;
@@ -33,7 +33,7 @@ public class Hud implements Disposable {
     private Label obeyLabel;
 
     private SpriteBatch spriteBatch;
-    private Texture texture;
+    private Texture texture;*/
 
     public Hud(SpriteBatch sb){
         worldTimer = 300;
@@ -43,7 +43,7 @@ public class Hud implements Disposable {
         viewport = new FitViewport(OBEY.V_WIDTH, OBEY.V_HEIGHT, new OrthographicCamera());
         stage = new Stage(viewport, sb);
 
-        Table table = new Table();
+        /*Table table = new Table();
         table.top();
         table.setFillParent(true);
 
@@ -67,7 +67,7 @@ public class Hud implements Disposable {
 
         //spriteBatch = new SpriteBatch();
         spriteBatch = sb;
-        texture = new Texture(Gdx.files.internal("pause_menu_hud_button.png"));
+        texture = new Texture(Gdx.files.internal("pause_menu_hud_button.png"));*/
 
 
     }
@@ -76,25 +76,25 @@ public class Hud implements Disposable {
         timeCount += dt;
         if (timeCount <= 1){
             worldTimer++;
-            countdownLabel.setText(String.format(Locale.US, "%03d", worldTimer));
+            //countdownLabel.setText(String.format(Locale.US, "%03d", worldTimer));
             timeCount = 0;
         }
 
 
-        spriteBatch.begin();
+        /*spriteBatch.begin();
         spriteBatch.draw(texture, 150, 150);
-        spriteBatch.end();
+        spriteBatch.end();*/
 
     }
 
-    public static void addScore(int value){
+    /*public static void addScore(int value){
         score += value;
         scoreLabel.setText(String.format(Locale.US,"%06d", score));
     }
 
     public Texture getPauseMenuTexture(){
         return texture;
-    }
+    }*/
     public float getWorldTimer(){
         return worldTimer;
     }
