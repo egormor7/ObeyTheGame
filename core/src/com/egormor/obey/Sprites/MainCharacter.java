@@ -128,15 +128,25 @@ public class MainCharacter extends Sprite {
         right_hand.set(new Vector2(25 / OBEY.PPM, 25 / OBEY.PPM), new Vector2(25 / OBEY.PPM, -25 / OBEY.PPM));
         fdef.shape = right_hand;
         fdef.isSensor = true;
-
         b2body.createFixture(fdef).setUserData("right_hand");
 
         EdgeShape left_hand = new EdgeShape();
         left_hand.set(new Vector2(-25 / OBEY.PPM, 25 / OBEY.PPM), new Vector2(-25 / OBEY.PPM, -25 / OBEY.PPM));
         fdef.shape = left_hand;
         fdef.isSensor = true;
-
         b2body.createFixture(fdef).setUserData("left_hand");
+
+        EdgeShape head = new EdgeShape();
+        head.set(new Vector2(-25 / OBEY.PPM, 35 / OBEY.PPM), new Vector2(25 / OBEY.PPM, 35 / OBEY.PPM));
+        fdef.shape = head;
+        fdef.isSensor = true;
+        b2body.createFixture(fdef).setUserData("head");
+
+        EdgeShape bottom = new EdgeShape();
+        bottom.set(new Vector2(-25 / OBEY.PPM, -35 / OBEY.PPM), new Vector2(25 / OBEY.PPM, -35 / OBEY.PPM));
+        fdef.shape = bottom;
+        fdef.isSensor = true;
+        b2body.createFixture(fdef).setUserData("bottom");
 
     }
 

@@ -83,6 +83,7 @@ public class PlayScreen implements Screen {
         gamecam.position.set(gamePort.getWorldWidth() / 2, gamePort.getWorldHeight() / 2, 0);
 
         world = new World(new Vector2(0, -40), true);
+        //b2dr = new Box2DDebugRenderer(false, false, false, true, false, false);
         b2dr = new Box2DDebugRenderer();
 
         player = new MainCharacter(this);
@@ -139,6 +140,9 @@ public class PlayScreen implements Screen {
                     countOfLastTouches = 0;
             }
         }
+        if ((countOfLastTouches == 1) && (Gdx.input.isTouched()) && (3 >= (hud.getWorldTimer() - TimeOfLastTouch))){
+            countOfLastTouches = 0;
+        }
 
         if (Gdx.input.isKeyPressed(Input.Keys.UP) && player.b2body.getLinearVelocity().y == 0)
             player.b2body.applyLinearImpulse(new Vector2(0, 80), player.b2body.getWorldCenter(), true);
@@ -154,7 +158,7 @@ public class PlayScreen implements Screen {
             player.b2body.applyLinearImpulse(new Vector2(-10.8f, 0), player.b2body.getWorldCenter(), true);
         if ((Gdx.input.isTouched() && (((Gdx.input.getDeltaY() < (Gdx.graphics.getHeight() / 25)) && (world.getGravity().y <= 0)) || ((Gdx.input.getDeltaY() > (Gdx.graphics.getHeight() / 25)) && (world.getGravity().y >= 0)))) || Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
             Gdx.app.log("Space", "Before: " + TimeOfLastSpacePress + " After: " + hud.getWorldTimer());
-            if (TimeOfLastSpacePress == 0 || ((-TimeOfLastSpacePress + hud.getWorldTimer()) >= 50)) {
+            if (TimeOfLastSpacePress == 0 || ((hud.getWorldTimer() - TimeOfLastSpacePress) >= 50)) {
                 Gdx.app.log("Space", "Pressed");
 
                 world.setGravity(new Vector2(world.getGravity().x, world.getGravity().y * -1));

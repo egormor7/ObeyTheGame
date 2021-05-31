@@ -34,6 +34,22 @@ public class WorldContactListener implements ContactListener {
                 ((Enemy) object.getUserData()).onHandHit();
             }
         }
+        if ("head".equals(fixA.getUserData()) || "head".equals(fixB.getUserData()) || "bottom".equals(fixA.getUserData()) || "bottom".equals(fixB.getUserData())){
+            Gdx.app.log("Head/Bottom", "collision");
+            Fixture hand, object;
+            if ("head".equals(fixA.getUserData()) || "bottom".equals(fixA.getUserData())){
+                hand = fixA;
+                object = fixB;
+            }
+            else{
+                hand = fixB;
+                object = fixA;
+            }
+
+            if (object.getUserData() != null && Enemy.class.isAssignableFrom(object.getUserData().getClass())){
+                ((Enemy) object.getUserData()).onHeadBottomHit();
+            }
+        }
     }
 
     @Override
