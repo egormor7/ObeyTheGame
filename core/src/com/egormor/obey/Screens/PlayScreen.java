@@ -125,7 +125,11 @@ public class PlayScreen implements Screen {
             else{
                 if ((countOfLastTouches == 1) && ((3 <= (hud.getWorldTimer() - TimeOfLastTouch)) && ((hud.getWorldTimer() - TimeOfLastTouch) <= 60))){
                     Gdx.app.log("double click", "");
+                    game.StateOfGame = OBEY.State.PAUSE;
                     countOfLastTouches = 0;
+                    game.setScreen(new PauseMenuScreen(game, this));
+                    pause();
+
                 }
                 else if (3 <= (hud.getWorldTimer() - TimeOfLastTouch)){
                     countOfLastTouches = 1;
@@ -182,6 +186,7 @@ public class PlayScreen implements Screen {
             Gdx.app.log("1", "Pressed");
             dispose();
             Gdx.app.log("2", "Pressed");
+            game.StateOfGame = OBEY.State.GAME_OVER;
             game.setScreen(new GameOverScreen(game));
             Gdx.app.log("3", "Pressed");
             return;
@@ -273,12 +278,13 @@ public class PlayScreen implements Screen {
 
     @Override
     public void pause() {
+        music.pause();
 
     }
 
     @Override
     public void resume() {
-
+        music.play();
     }
 
     @Override

@@ -127,6 +127,7 @@ public class MainMenuScreen implements Screen {
             //if (rect_start_button.contains(touchPoint.x, touchPoint.y))
             //    Gdx.app.log("Clicked on start", "Coordinates: " + String.format(Locale.US, "%d %d",  Gdx.input.getX(), Gdx.input.getY()));
             if (isInSquare(touchPoint.x, touchPoint.y, x_start, y_start, x_start_width, y_start_height)) {
+                game.StateOfGame = OBEY.State.GAME;
                 game.setScreen(new PlayScreen(game));
                 dispose();
             }

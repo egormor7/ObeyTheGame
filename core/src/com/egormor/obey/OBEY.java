@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.egormor.obey.Screens.GameOverScreen;
 import com.egormor.obey.Screens.MainMenuScreen;
 import com.egormor.obey.Screens.PlayScreen;
+import com.egormor.obey.Sprites.RobotEnemy;
 
 public class OBEY extends Game {
 	public static final int V_WIDTH = 1000;
@@ -29,6 +30,9 @@ public class OBEY extends Game {
 	public static final short LASER_BIT = 16;
     public static final short OBJECT_BIT = 32;
     public static final short ENEMY_BIT = 64;
+
+	public enum State { MAIN_MENU, GAME, PAUSE, GAME_OVER};
+	public State StateOfGame;
 
 	public static final String MUSIC_PATH = "audio/music/tunetank.com_1746_abandoned-factory_by_finval.mp3";
 	public static final String SOUND_BREAK_BLOCK_PATH = "audio/sounds/android_assets_audio_sounds_breakblock.wav";
@@ -48,6 +52,7 @@ public class OBEY extends Game {
         manager.finishLoading();
 
 		//setScreen(new PlayScreen(this));
+		StateOfGame = State.MAIN_MENU;
 		setScreen(new MainMenuScreen(this));
         //setScreen(new GameOverScreen(this));
 	}

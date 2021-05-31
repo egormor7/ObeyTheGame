@@ -117,10 +117,12 @@ public class GameOverScreen implements Screen {
             //if (rect_start_button.contains(touchPoint.x, touchPoint.y))
             //    Gdx.app.log("Clicked on start", "Coordinates: " + String.format(Locale.US, "%d %d",  Gdx.input.getX(), Gdx.input.getY()));
             if (isInSquare(touchPoint.x, touchPoint.y, x_menu, y_menu, x_menu_width, y_menu_height)) {
+                game.StateOfGame = OBEY.State.MAIN_MENU;
                 game.setScreen(new MainMenuScreen(game));
                 dispose();
             }
             else if (isInSquare(touchPoint.x, touchPoint.y, x_try_again, y_try_again, x_try_again_width, y_try_again_height)){
+                game.StateOfGame = OBEY.State.GAME;
                 game.setScreen(new PlayScreen(game));
                 dispose();
                 /*Gdx.app.log("exit button", "Coordinates: ");
