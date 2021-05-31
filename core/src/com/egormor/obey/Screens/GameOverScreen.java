@@ -2,6 +2,7 @@ package com.egormor.obey.Screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.MapObject;
@@ -29,6 +30,8 @@ public class GameOverScreen implements Screen {
     private OrthogonalTiledMapRenderer renderer;
 
     private World world;
+
+    private Music music;
 
     protected Fixture fixture;
 
@@ -74,7 +77,8 @@ public class GameOverScreen implements Screen {
 
     @Override
     public void render(float delta) {
-
+        if (game.StateOfGame != OBEY.State.GAME_OVER)
+            return;
         gamecam.update();
         renderer.setView(gamecam);
 
@@ -90,12 +94,17 @@ public class GameOverScreen implements Screen {
 
             if (isInSquare(touchPoint.x, touchPoint.y, x_menu, y_menu, x_menu_width, y_menu_height)) {
                 game.StateOfGame = OBEY.State.MAIN_MENU;
-                game.setScreen(new MainMenuScreen(game));
+                game.setScreen(game.main_menu_screen);
+                game.disposeCurrentMusic();
+                game.setMusic(OBEY.MAIN_MENU_SCREEN_MUSIC_PATH);
                 dispose();
             }
             else if (isInSquare(touchPoint.x, touchPoint.y, x_try_again, y_try_again, x_try_again_width, y_try_again_height)){
                 game.StateOfGame = OBEY.State.GAME;
-                game.setScreen(new PlayScreen(game));
+                game.play_screen = new PlayScreen(game);
+                game.setScreen(game.play_screen);
+                game.disposeCurrentMusic();
+                game.setMusic(OBEY.PLAY_SCREEN_MUSIC_PATH);
                 dispose();
             }
         }
@@ -130,5 +139,6 @@ public class GameOverScreen implements Screen {
 
     @Override
     public void dispose() {
+        //music.dispose();
     }
 }

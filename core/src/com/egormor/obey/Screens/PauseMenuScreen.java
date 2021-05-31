@@ -2,6 +2,7 @@ package com.egormor.obey.Screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.MapObject;
@@ -38,11 +39,14 @@ public class PauseMenuScreen implements Screen {
     private Rectangle rect_continue_button;
     private Rectangle rect_menu_button;
 
+    private Music music;
+    boolean isMusicPlaying = false;
+
     Vector3 touchPoint;
 
-    public PauseMenuScreen(OBEY game, PlayScreen playScreen) {
+    public PauseMenuScreen(OBEY game) {
         this.game = game;
-        this.playScreen = playScreen;
+        //this.playScreen = playScreen;
 
 
         gamecam = new OrthographicCamera();
@@ -78,8 +82,22 @@ public class PauseMenuScreen implements Screen {
         }
     }
 
+    private void setPauseMenuMusic(){
+        music = OBEY.manager.get(OBEY.PAUSE_MENU_SCREEN_MUSIC_PATH, Music.class);
+        music.setLooping(true);
+        music.play();
+    }
+
     @Override
     public void render(float delta) {
+        if (game.StateOfGame != OBEY.State.PAUSE)
+            return;
+
+        if (!isMusicPlaying){
+            setPauseMenuMusic();
+            isMusicPlaying = true;
+        }
+
         gamecam.update();
         renderer.setView(gamecam);
 
@@ -95,13 +113,14 @@ public class PauseMenuScreen implements Screen {
 
             if (isInSquare(touchPoint.x, touchPoint.y, x_continue, y_continue, x_continue_width, y_continue_height)) {
                 game.StateOfGame = OBEY.State.GAME;
-                game.setScreen(playScreen);
-                playScreen.resume();
+                game.setScreen(game.play_screen);
+                game.unPauseCurrentMusic();
                 dispose();
             }
             else if (isInSquare(touchPoint.x, touchPoint.y, x_menu, y_menu, x_menu_width, y_menu_height)){
                 game.StateOfGame = OBEY.State.MAIN_MENU;
-                game.setScreen(new MainMenuScreen(game));
+                game.setScreen(game.main_menu_screen);
+                game.setMusic(OBEY.MAIN_MENU_SCREEN_MUSIC_PATH);
                 dispose();
             }
         }
@@ -136,5 +155,7 @@ public class PauseMenuScreen implements Screen {
 
     @Override
     public void dispose() {
+        music.dispose();
+        isMusicPlaying = false;
     }
 }

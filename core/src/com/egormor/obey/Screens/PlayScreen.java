@@ -95,9 +95,9 @@ public class PlayScreen implements Screen {
 
         world.setContactListener(new WorldContactListener());
 
-        music = OBEY.manager.get(OBEY.MUSIC_PATH, Music.class);
+        /*music = OBEY.manager.get(OBEY.PLAY_SCREEN_MUSIC_PATH, Music.class);
         music.setLooping(true);
-        music.play();
+        music.play();*/
 
         robotEnemyArray = new Array<>();
         for (int i = 0; i < robotEnemy_x_cords.length; i++) {
@@ -130,7 +130,8 @@ public class PlayScreen implements Screen {
                     Gdx.app.log("double click", "");
                     game.StateOfGame = OBEY.State.PAUSE;
                     countOfLastTouches = 0;
-                    game.setScreen(new PauseMenuScreen(game, this));
+                    game.setScreen(game.pause_menu_screen);
+                    game.pauseCurrentMusic();
                     pause();
 
                 }
@@ -142,9 +143,9 @@ public class PlayScreen implements Screen {
                     countOfLastTouches = 0;
             }
         }
-        if ((countOfLastTouches == 1) && (Gdx.input.isTouched()) && (3 >= (hud.getWorldTimer() - TimeOfLastTouch))){
+        /*if ((countOfLastTouches == 1) && (Gdx.input.isTouched()) && (3 >= (hud.getWorldTimer() - TimeOfLastTouch))){
             countOfLastTouches = 0;
-        }
+        }*/
 
         if (Gdx.input.isKeyPressed(Input.Keys.UP) && player.b2body.getLinearVelocity().y == 0)
             player.b2body.applyLinearImpulse(new Vector2(0, 80), player.b2body.getWorldCenter(), true);
@@ -163,6 +164,9 @@ public class PlayScreen implements Screen {
         //  Also, between two gravity changes must be a defined delay
         if ((Gdx.input.isTouched() && (((Gdx.input.getDeltaY() < (Gdx.graphics.getHeight() / 25)) && (world.getGravity().y <= 0)) || ((Gdx.input.getDeltaY() > (Gdx.graphics.getHeight() / 25)) && (world.getGravity().y >= 0)))) || Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
             Gdx.app.log("Space", "Before: " + TimeOfLastSpacePress + " After: " + hud.getWorldTimer());
+            //  flush the counter of clicks because that's swipe
+            if (Gdx.input.isTouched() && (((Gdx.input.getDeltaY() < (Gdx.graphics.getHeight() / 25)) && (world.getGravity().y <= 0)) || ((Gdx.input.getDeltaY() > (Gdx.graphics.getHeight() / 25)) && (world.getGravity().y >= 0))))
+                countOfLastTouches = 0;
             if (TimeOfLastSpacePress == 0 || ((hud.getWorldTimer() - TimeOfLastSpacePress) >= 50)) {
                 Gdx.app.log("Space", "Pressed");
 
@@ -185,7 +189,10 @@ public class PlayScreen implements Screen {
             game_over_over = true;
             dispose();
             game.StateOfGame = OBEY.State.GAME_OVER;
-            game.setScreen(new GameOverScreen(game));
+            //game.setScreen(new GameOverScreen(game));
+            game.setScreen(game.game_over_screen);
+            game.disposeCurrentMusic();
+            game.setMusic(OBEY.GAME_OVER_SCREEN_MUSIC_PATH);
             return;
         }
         handleInput(dt);
@@ -208,8 +215,12 @@ public class PlayScreen implements Screen {
 
     }
 
+
     @Override
     public void render(float delta) {
+        if (game.StateOfGame != OBEY.State.GAME) {
+            return;
+        }
         if (game_over && game_over_over)
             return;
         update(delta);
@@ -265,12 +276,12 @@ public class PlayScreen implements Screen {
 
     @Override
     public void pause() {
-        music.pause();
+        //music.pause();
     }
 
     @Override
     public void resume() {
-        music.play();
+        //music.play();
     }
 
     @Override
@@ -285,8 +296,8 @@ public class PlayScreen implements Screen {
         world.dispose();
         b2dr.dispose();
         hud.dispose();
-        music.stop();
-        music.dispose();
+        //music.stop();
+        //music.dispose();
         atlas.dispose();
         game.batch.flush();
     }

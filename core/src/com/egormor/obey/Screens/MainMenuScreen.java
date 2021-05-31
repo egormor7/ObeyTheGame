@@ -86,6 +86,9 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        if (game.StateOfGame != OBEY.State.MAIN_MENU)
+            return;
+
         gamecam.update();
         renderer.setView(gamecam);
 
@@ -101,7 +104,10 @@ public class MainMenuScreen implements Screen {
 
             if (isInSquare(touchPoint.x, touchPoint.y, x_start, y_start, x_start_width, y_start_height)) {
                 game.StateOfGame = OBEY.State.GAME;
-                game.setScreen(new PlayScreen(game));
+                game.play_screen = new PlayScreen(game);
+                game.setScreen(game.play_screen);
+                game.disposeCurrentMusic();
+                game.setMusic(OBEY.PLAY_SCREEN_MUSIC_PATH);
                 dispose();
             }
             else if (isInSquare(touchPoint.x, touchPoint.y, x_exit, y_exit, x_exit_width, y_exit_height)){
