@@ -3,6 +3,7 @@ package com.egormor.obey;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
@@ -35,11 +36,14 @@ public class OBEY extends Game {
 	public enum State { MAIN_MENU, GAME, PAUSE, GAME_OVER};
 	public State StateOfGame;
 
-	public static final String MUSIC_PATH = "audio/music/tunetank.com_1746_abandoned-factory_by_finval.mp3";
-	public static final String SOUND_BREAK_BLOCK_PATH = "audio/sounds/android_assets_audio_sounds_breakblock.wav";
+	public static final String MUSIC_PATH = "audio/music/tunetank.com_1746_abandoned-factory_by_finval.mp3";	//https://tunetank.com/t/1bpr/4063-they-will-come-for-us
+	public static final String SOUND_BREAK_BLOCK_PATH = "audio/sounds/android_assets_audio_sounds_breakblock.wav";	//https://tunetank.com/track/1746-abandoned-factory
+	//https://tunetank.com/t/1bpr/1735-ocean-floor
 
 	public SpriteBatch batch;
 	public BitmapFont font;
+
+	private Screen game_over_screen;
 
 	public static AssetManager manager;
 	@Override
@@ -52,12 +56,12 @@ public class OBEY extends Game {
         manager.load(SOUND_BREAK_BLOCK_PATH, Sound.class);
         manager.finishLoading();
 
+        //game_over_screen = new GameOverScreen(this);
 		//setScreen(new PlayScreen(this));
 		StateOfGame = State.MAIN_MENU;
 		setScreen(new MainMenuScreen(this));
 		//Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer(true, true, false, true, false, true);
 
-        //setScreen(new GameOverScreen(this));
 	}
 
 	@Override

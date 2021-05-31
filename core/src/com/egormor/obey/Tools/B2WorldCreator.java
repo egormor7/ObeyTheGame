@@ -23,7 +23,8 @@ public class B2WorldCreator {
         PolygonShape shape = new PolygonShape();
         FixtureDef fdef = new FixtureDef();
         Body body;
-        //create walls bodies/fixtures for other objects the same cycle
+
+        //  create walls bodies/fixtures for other objects the same cycle
         for (MapObject object: map.getLayers().get(3).getObjects().getByType(RectangleMapObject.class)){
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 

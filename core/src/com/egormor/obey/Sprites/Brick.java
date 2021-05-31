@@ -11,10 +11,8 @@ import com.egormor.obey.Scenes.Hud;
 import com.egormor.obey.Screens.PlayScreen;
 
 public class Brick extends InteractiveTileObject{
-    //private static TiledMapTileSet tileSet;
     public Brick(PlayScreen screen, Rectangle bounds){
         super(screen, bounds);
-        //tileSet = map.getTileSets().getTileSet("texture");
         fixture.setUserData(this);
         setCategoryFilter(OBEY.BRICK_BIT);
     }
@@ -24,7 +22,6 @@ public class Brick extends InteractiveTileObject{
         Gdx.app.log("Brick", "Collision");
         setCategoryFilter(OBEY.DESTROYED_BIT);
         deleteCells();
-        //Hud.addScore(200);
         OBEY.manager.get(OBEY.SOUND_BREAK_BLOCK_PATH, Sound.class).play();
     }
 }

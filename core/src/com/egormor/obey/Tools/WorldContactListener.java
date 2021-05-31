@@ -16,6 +16,8 @@ public class WorldContactListener implements ContactListener {
         Fixture fixA = contact.getFixtureA();
         Fixture fixB = contact.getFixtureB();
 
+        //  Detects collision with four sides of MainCharacter with InteractiveTileObject / Enemy and calls their onHandHit()
+        //  for Enemy also onHeadBottomHit()
         if ("right_hand".equals(fixA.getUserData()) || "right_hand".equals(fixB.getUserData()) || "left_hand".equals(fixA.getUserData()) || "left_hand".equals(fixB.getUserData())){
             Fixture hand, object;
             if ("right_hand".equals(fixA.getUserData()) || "left_hand".equals(fixA.getUserData())){
@@ -34,6 +36,7 @@ public class WorldContactListener implements ContactListener {
                 ((Enemy) object.getUserData()).onHandHit();
             }
         }
+
         if ("head".equals(fixA.getUserData()) || "head".equals(fixB.getUserData()) || "bottom".equals(fixA.getUserData()) || "bottom".equals(fixB.getUserData())){
             Gdx.app.log("Head/Bottom", "collision");
             Fixture hand, object;

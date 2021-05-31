@@ -21,8 +21,6 @@ import com.egormor.obey.OBEY;
 public class GameOverScreen implements Screen {
     private OBEY game;
 
-    //OrthographicCamera camera;
-
     private OrthographicCamera gamecam;
     private Viewport gamePort;
 
@@ -43,7 +41,7 @@ public class GameOverScreen implements Screen {
         this.game = game;
         Gdx.app.log("4", "Pressed");
         gamecam = new OrthographicCamera();
-        gamePort = new FillViewport(OBEY.MENU_WIDTH / OBEY.PPM, OBEY.MENU_HEIGHT / OBEY.PPM, gamecam); //(OBEY.V_WIDTH / OBEY.PPM, OBEY.V_HEIGHT / OBEY.PPM, gamecam);
+        gamePort = new FillViewport(OBEY.MENU_WIDTH / OBEY.PPM, OBEY.MENU_HEIGHT / OBEY.PPM, gamecam);
 
         maploader = new TmxMapLoader();
         map = maploader.load("game_over_display.tmx");
@@ -52,20 +50,9 @@ public class GameOverScreen implements Screen {
         gamecam.position.set(gamePort.getWorldWidth() / 2, gamePort.getWorldHeight() / 2, 0);
         world = new World(new Vector2(0, -20), true);
 
-        //World world = .getWorld();
-        //TiledMap map = screen.getMap();
-        //BodyDef bdef = new BodyDef();
-        //PolygonShape shape = new PolygonShape();
-        //FixtureDef fdef = new FixtureDef();
-        //Body body;
-
-
-        //Float x_start, y_start, x_start_width, y_start_height;
-        //create walls bodies/fixtures for other objects the same cycle
-
         touchPoint = new Vector3();
 
-
+        // Getting "try again" and "go to menu" buttons from the corresponding map layers and save their cords
         for (MapObject object: map.getLayers().get(1).getObjects().getByType(RectangleMapObject.class)){
             rect_try_again_button = ((RectangleMapObject) object).getRectangle();
 
@@ -75,8 +62,6 @@ public class GameOverScreen implements Screen {
             y_try_again_height = rect_try_again_button.getHeight() / OBEY.PPM;
         }
 
-        //Float x_exit, y_exit, x_exit_width, y_exit_height;
-        //create walls bodies/fixtures for other objects the same cycle
         for (MapObject object: map.getLayers().get(2).getObjects().getByType(RectangleMapObject.class)){
             rect_menu_button = ((RectangleMapObject) object).getRectangle();
 
@@ -99,23 +84,10 @@ public class GameOverScreen implements Screen {
         renderer.render();
         game.batch.setProjectionMatrix(gamecam.combined);
 
-
-        /*game.batch.begin();
-        game.font.draw(game.batch, "OBEY ", 100, 150);
-        game.font.draw(game.batch, "Tap anywhere to begin!", 100, 100);
-        game.batch.end();*/
-
         if (Gdx.input.justTouched()) {
-            //Gdx.app.log("Clicked ", "Coordinates: " + String.format(Locale.US, "%d %d",  Gdx.input.getX(), Gdx.input.getY()));
-            //Gdx.app.log("Start button ", "Coordinates: " + String.format(Locale.US, "%f %f %f %f",  x_start, y_start, x_start + x_start_width, y_start + y_start_height));
-            //Gdx.app.log("Exit button ", "Coordinates: " + String.format(Locale.US, "%f %f %f %f",  x_exit, y_exit, x_exit + x_exit_width, y_exit + y_exit_height));
             touchPoint.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             gamecam.unproject(touchPoint);
-            //Gdx.app.log("Clicked ", "Coordinates: " + String.format(Locale.US, "%f %f",  touchPoint.x, touchPoint.y));
-            //Gdx.app.log("Start button ", "Coordinates: " + String.format(Locale.US, "%f %f %f %f",  x_start, y_start, x_start + x_start_width, y_start + y_start_height));
-            //Gdx.app.log("Exit button ", "Coordinates: " + String.format(Locale.US, "%f %f %f %f",  x_exit, y_exit, x_exit + x_exit_width, y_exit + y_exit_height));
-            //if (rect_start_button.contains(touchPoint.x, touchPoint.y))
-            //    Gdx.app.log("Clicked on start", "Coordinates: " + String.format(Locale.US, "%d %d",  Gdx.input.getX(), Gdx.input.getY()));
+
             if (isInSquare(touchPoint.x, touchPoint.y, x_menu, y_menu, x_menu_width, y_menu_height)) {
                 game.StateOfGame = OBEY.State.MAIN_MENU;
                 game.setScreen(new MainMenuScreen(game));
@@ -125,10 +97,6 @@ public class GameOverScreen implements Screen {
                 game.StateOfGame = OBEY.State.GAME;
                 game.setScreen(new PlayScreen(game));
                 dispose();
-                /*Gdx.app.log("exit button", "Coordinates: ");
-                dispose();
-                Gdx.app.exit();
-                System.exit(0);*/
             }
         }
     }

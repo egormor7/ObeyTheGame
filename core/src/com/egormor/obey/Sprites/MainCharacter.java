@@ -19,17 +19,26 @@ public class MainCharacter extends Sprite {
     public enum State { FALLING, JUMPING, STANDING, RUNNING};
     public State currentState;
     public State previousState;
-    public World world;
-    public Body b2body;
-    private TextureRegion mainCharacterStand;
-    private Animation <TextureRegion> mainCharacterRun;
-    private Animation <TextureRegion> mainCharacterJump;
     private float stateTimer;
     public boolean runningRight, fallingDown;
 
-    public MainCharacter(PlayScreen screen){
+    public World world;
+    public Body b2body;
+
+    private TextureRegion mainCharacterStand;
+    private Animation <TextureRegion> mainCharacterRun;
+    private Animation <TextureRegion> mainCharacterJump;
+
+    private float x_create_cord, y_create_cord;
+
+    public MainCharacter(PlayScreen screen, float x_create_cord, float y_create_cord){
         super(screen.getAtlas().findRegion("sprites"));
+
         this.world = screen.getWorld();
+
+        this.x_create_cord = x_create_cord;
+        this.y_create_cord = y_create_cord;
+
         currentState = State.STANDING;
         previousState = State.STANDING;
         stateTimer = 0;
@@ -37,7 +46,7 @@ public class MainCharacter extends Sprite {
         fallingDown = true;
 
         Array<TextureRegion> frames = new Array<TextureRegion>();
-        // Same for other movements
+        //  Same for other movements
         for(int i = 0;i < 10; i++)
             frames.add(new TextureRegion(getTexture(), 12 + i * 46, 28, 45, 65));
         mainCharacterRun = new Animation<TextureRegion>(0.1f, frames);
@@ -71,6 +80,8 @@ public class MainCharacter extends Sprite {
                 region = mainCharacterStand;
                 break;
         }
+        //  flips the region to looks right / left if character runs right / left
+        //  flips the region to looks fall up / down if character falls up / down
         if ((b2body.getLinearVelocity().x < 0 || !runningRight) && !region.isFlipX()){
             region.flip(true, false);
             runningRight = false;
@@ -82,11 +93,9 @@ public class MainCharacter extends Sprite {
 
         if ((!fallingDown) && !region.isFlipY()){
             region.flip(false, true);
-            //fallingDown = false;
         }
         else if ((fallingDown) && region.isFlipY()){
             region.flip(false, true);
-            //fallingDown = true;
         }
 
         stateTimer = currentState == previousState ? stateTimer + dt : 0;
@@ -107,7 +116,7 @@ public class MainCharacter extends Sprite {
 
     public void defineMainCharacter(){
         BodyDef bdef = new BodyDef();
-        bdef.position.set(1400 / OBEY.PPM, 830 / OBEY.PPM);
+        bdef.position.set(x_create_cord, y_create_cord);
         bdef.type = BodyDef.BodyType.DynamicBody;
         b2body = world.createBody(bdef);
 
@@ -118,12 +127,15 @@ public class MainCharacter extends Sprite {
                 new Vector2(22 / OBEY.PPM, -33 / OBEY.PPM),
                 new Vector2(-22 / OBEY.PPM, -33 / OBEY.PPM)});
 
+        //  assert MainCharacter "class" (OBEY.MAIN_CHARACTER_BIT) and "classes" with which collide
         fdef.filter.categoryBits = OBEY.MAIN_CHARACTER_BIT;
         fdef.filter.maskBits = OBEY.GROUND_BIT | OBEY.BRICK_BIT | OBEY.LASER_BIT | OBEY.OBJECT_BIT | OBEY.ENEMY_BIT;
 
         fdef.shape = shape;
         b2body.createFixture(fdef);
 
+        //  creating sensors which isn't collide to anything physically, but detect sensor collision
+        //  for every four sides of the body. Collision detects in WorldContactListener.java
         EdgeShape right_hand = new EdgeShape();
         right_hand.set(new Vector2(25 / OBEY.PPM, 25 / OBEY.PPM), new Vector2(25 / OBEY.PPM, -25 / OBEY.PPM));
         fdef.shape = right_hand;

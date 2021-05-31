@@ -148,9 +148,5 @@ public class RobotEnemy extends Enemy{
     public void onHeadBottomHit() {
         Gdx.app.log("Enemy", "Collision");
         screen.game_over = true;
-        //setCategoryFilter(OBEY.DESTROYED_BIT);
-        //deleteCells();
-        //Hud.addScore(200);
-        //OBEY.manager.get(OBEY.SOUND_BREAK_BLOCK_PATH, Sound.class).play();
     }
 }
