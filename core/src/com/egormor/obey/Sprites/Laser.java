@@ -1,6 +1,7 @@
 package com.egormor.obey.Sprites;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Rectangle;
@@ -10,11 +11,14 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.egormor.obey.OBEY;
 import com.egormor.obey.Scenes.Hud;
+import com.egormor.obey.Screens.GameOverScreen;
 import com.egormor.obey.Screens.PlayScreen;
 
 public class Laser extends InteractiveTileObject{
+    private PlayScreen screen;
     public Laser(PlayScreen screen, Rectangle bounds){
         super(screen, bounds);
+        this.screen = screen;
         fixture.setUserData(this);
         setCategoryFilter(OBEY.LASER_BIT);
     }
@@ -22,9 +26,13 @@ public class Laser extends InteractiveTileObject{
     @Override
     public void onHandHit() {
         Gdx.app.log("Laser", "Collision");
+        screen.game_over = true;
+        /*OBEY game = screen.getGame();
+        game.setScreen(new GameOverScreen(game));
+        screen.dispose();*/
         //setCategoryFilter(OBEY.DESTROYED_BIT);
         //deleteCells();
-        Hud.addScore(-200);
+        //Hud.addScore(-200);
 
         //OBEY.manager.get(OBEY.SOUND_BREAK_BLOCK_PATH, Sound.class).play();
     }

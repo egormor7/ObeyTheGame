@@ -61,6 +61,12 @@ public class PlayScreen implements Screen {
     private Music music;
 
     private float TimeOfLastSpacePress = 0;
+    private float TimeOfLastTouch = 0;
+    private float countOfLastTouches = 0;
+    public boolean game_over = false;
+    public boolean game_over_over = false;
+
+    private Texture pause_button_texture;
 
     public  PlayScreen(OBEY game){
         atlas = new TextureAtlas("sprites_2.atlas");
@@ -95,6 +101,8 @@ public class PlayScreen implements Screen {
             robotEnemy = new RobotEnemy(this, robotEnemy_x_cords[i], robotEnemy_y_cords[i], robotEnemy_x_cords[i], robotEnemy_y_cords[i]);
             robotEnemyArray.add(robotEnemy);
         }
+
+        pause_button_texture = new Texture(Gdx.files.internal("pause_menu_hud_button.png"));
     }
 
     public TextureAtlas getAtlas(){
@@ -108,22 +116,41 @@ public class PlayScreen implements Screen {
     }
 
     public void handleInput(float dt){
+        if (Gdx.input.justTouched()){
+            Gdx.app.log("touch " + countOfLastTouches, "" + hud.getWorldTimer());
+            if (TimeOfLastTouch == 0) {
+                TimeOfLastTouch = hud.getWorldTimer();
+                countOfLastTouches = 1;
+            }
+            else{
+                if ((countOfLastTouches == 1) && ((3 <= (hud.getWorldTimer() - TimeOfLastTouch)) && ((hud.getWorldTimer() - TimeOfLastTouch) <= 60))){
+                    Gdx.app.log("double click", "");
+                    countOfLastTouches = 0;
+                }
+                else if (3 <= (hud.getWorldTimer() - TimeOfLastTouch)){
+                    countOfLastTouches = 1;
+                    TimeOfLastTouch = hud.getWorldTimer();
+                }
+                else
+                    countOfLastTouches = 0;
+            }
+        }
 
         if (Gdx.input.isKeyPressed(Input.Keys.UP) && player.b2body.getLinearVelocity().y == 0)
             player.b2body.applyLinearImpulse(new Vector2(0, 80), player.b2body.getWorldCenter(), true);
         if (Gdx.input.isKeyPressed(Input.Keys.DOWN) && player.b2body.getLinearVelocity().y == 0)
             player.b2body.applyLinearImpulse(new Vector2(0, -80), player.b2body.getWorldCenter(), true);
-        if (((Gdx.input.isTouched() && (Gdx.input.getX() > Gdx.graphics.getWidth() / 2)) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)) && player.b2body.getLinearVelocity().x <= 6) {
+        if (((Gdx.input.isTouched() && (Gdx.input.getX() > Gdx.graphics.getWidth() / 2)) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)) && player.b2body.getLinearVelocity().x <= 20) {
 
             player.b2body.applyLinearImpulse(new Vector2(10.8f, 0), player.b2body.getWorldCenter(), true);
             Gdx.app.log("Touch at x:", Float.toString(Gdx.input.getX()));
             Gdx.app.log("Cam at x:", Float.toString(Gdx.graphics.getWidth()));
         }
-        if (((Gdx.input.isTouched() && (Gdx.input.getX() < Gdx.graphics.getWidth() / 2)) || Gdx.input.isKeyPressed(Input.Keys.LEFT)) && player.b2body.getLinearVelocity().x >= -6)
+        if (((Gdx.input.isTouched() && (Gdx.input.getX() < Gdx.graphics.getWidth() / 2)) || Gdx.input.isKeyPressed(Input.Keys.LEFT)) && player.b2body.getLinearVelocity().x >= -20)
             player.b2body.applyLinearImpulse(new Vector2(-10.8f, 0), player.b2body.getWorldCenter(), true);
         if ((Gdx.input.isTouched() && (((Gdx.input.getDeltaY() < (Gdx.graphics.getHeight() / 25)) && (world.getGravity().y <= 0)) || ((Gdx.input.getDeltaY() > (Gdx.graphics.getHeight() / 25)) && (world.getGravity().y >= 0)))) || Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
             Gdx.app.log("Space", "Before: " + TimeOfLastSpacePress + " After: " + hud.getWorldTimer());
-            if (TimeOfLastSpacePress == 0 || ((TimeOfLastSpacePress - hud.getWorldTimer()) >= 1)) {
+            if (TimeOfLastSpacePress == 0 || ((-TimeOfLastSpacePress + hud.getWorldTimer()) >= 1)) {
                 Gdx.app.log("Space", "Pressed");
 
                 world.setGravity(new Vector2(world.getGravity().x, world.getGravity().y * -1));
@@ -150,6 +177,16 @@ public class PlayScreen implements Screen {
     }
 
     public void update(float dt){
+        if (game_over && !game_over_over){
+            game_over_over = true;
+            Gdx.app.log("1", "Pressed");
+            dispose();
+            Gdx.app.log("2", "Pressed");
+            game.setScreen(new GameOverScreen(game));
+            Gdx.app.log("3", "Pressed");
+            return;
+            //dispose();
+        }
         handleInput(dt);
 
         world.step(1/30f, 6, 2);
@@ -173,7 +210,11 @@ public class PlayScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        if (game_over && game_over_over)
+            return;
         update(delta);
+        if (game_over && game_over_over)
+            return;
 
         Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -196,6 +237,13 @@ public class PlayScreen implements Screen {
 
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         hud.stage.draw();
+
+        game.batch.begin();
+        game.batch.draw(hud.getPauseMenuTexture(), (float)140, Gdx.graphics.getHeight() - 140);
+        //Gdx.app.log("" + Gdx.graphics.getWidth() , "" + Gdx.graphics.getHeight());
+
+        game.batch.draw(pause_button_texture, 410, 540);
+        game.batch.end();
     }
 
     public float getPlayerX(){
@@ -217,6 +265,10 @@ public class PlayScreen implements Screen {
 
     public World getWorld(){
         return world;
+    }
+
+    public OBEY getGame(){
+        return game;
     }
 
     @Override
@@ -241,5 +293,11 @@ public class PlayScreen implements Screen {
         world.dispose();
         b2dr.dispose();
         hud.dispose();
+        music.stop();
+        music.dispose();
+        atlas.dispose();
+        //game.batch.dispose();
+        game.batch.flush();
+        //Gdx.app.exit();
     }
 }

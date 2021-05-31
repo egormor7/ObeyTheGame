@@ -1,7 +1,9 @@
 package com.egormor.obey.Scenes;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -29,6 +31,9 @@ public class Hud implements Disposable {
     private Label levelLabel;
     private Label worldLabel;
     private Label obeyLabel;
+
+    private SpriteBatch spriteBatch;
+    private Texture texture;
 
     public Hud(SpriteBatch sb){
         worldTimer = 300;
@@ -58,15 +63,28 @@ public class Hud implements Disposable {
         table.add(countdownLabel).expandX();
 
         stage.addActor(table);
+
+
+        //spriteBatch = new SpriteBatch();
+        spriteBatch = sb;
+        texture = new Texture(Gdx.files.internal("pause_menu_hud_button.png"));
+
+
     }
 
     public void update(float dt){
         timeCount += dt;
-        if (timeCount >= 1){
-            worldTimer--;
+        if (timeCount <= 1){
+            worldTimer++;
             countdownLabel.setText(String.format(Locale.US, "%03d", worldTimer));
             timeCount = 0;
         }
+
+
+        spriteBatch.begin();
+        spriteBatch.draw(texture, 150, 150);
+        spriteBatch.end();
+
     }
 
     public static void addScore(int value){
@@ -74,6 +92,9 @@ public class Hud implements Disposable {
         scoreLabel.setText(String.format(Locale.US,"%06d", score));
     }
 
+    public Texture getPauseMenuTexture(){
+        return texture;
+    }
     public float getWorldTimer(){
         return worldTimer;
     }

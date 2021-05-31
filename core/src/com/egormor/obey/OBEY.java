@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.egormor.obey.Screens.GameOverScreen;
 import com.egormor.obey.Screens.MainMenuScreen;
 import com.egormor.obey.Screens.PlayScreen;
 
@@ -48,6 +49,7 @@ public class OBEY extends Game {
 
 		//setScreen(new PlayScreen(this));
 		setScreen(new MainMenuScreen(this));
+        //setScreen(new GameOverScreen(this));
 	}
 
 	@Override
