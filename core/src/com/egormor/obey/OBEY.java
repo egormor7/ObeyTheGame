@@ -1,22 +1,16 @@
 package com.egormor.obey;
 
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.egormor.obey.Screens.GameOverScreen;
 import com.egormor.obey.Screens.MainMenuScreen;
 import com.egormor.obey.Screens.PauseMenuScreen;
 import com.egormor.obey.Screens.PlayScreen;
-import com.egormor.obey.Sprites.RobotEnemy;
 
 public class OBEY extends Game {
 	public static final int V_WIDTH = 1000;
@@ -57,6 +51,7 @@ public class OBEY extends Game {
 	public MainMenuScreen mainMenuScreen;
 	public PlayScreen playScreen;
 
+	public static long startTime;
 
 	public static AssetManager manager;
 	@Override
@@ -77,6 +72,7 @@ public class OBEY extends Game {
         manager.finishLoading();
 
 		StateOfGame = State.MAIN_MENU;
+		startTime = TimeUtils.millis();
 
 		//	Creating every possible screen in the game.
 		//	That's optimization, because screens creating once, at begin of the game.

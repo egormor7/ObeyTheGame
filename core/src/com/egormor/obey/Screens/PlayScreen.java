@@ -3,30 +3,19 @@ package com.egormor.obey.Screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.maps.MapObject;
-import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FillViewport;
-import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.egormor.obey.OBEY;
 import com.egormor.obey.Scenes.Hud;
@@ -58,8 +47,8 @@ public class PlayScreen implements Screen {
     private Array<Float> robotEnemy_x_cords;
     private Array<Float> robotEnemy_y_cords;
 
-    //  corresponding cords where to create robotEnemies (e.g. (robotEnemy_x_cords[0] ; robotEnemy_y_cords[0])
-    //  cords for the first enemy, (robotEnemy_x_cords[1] ; robotEnemy_y_cords[1]) for the second, etc.)
+    //  corresponding cords where to create robotEnemies (e.g. (start_robotEnemy_x_cords[0] ; start_robotEnemy_y_cords[0])
+    //  cords for the first enemy, (start_robotEnemy_x_cords[1] ; start_robotEnemy_y_cords[1]) for the second, etc.)
     private static final float[] start_robotEnemy_x_cords = {323, 110, 408, 143};
     private static final float[] start_robotEnemy_y_cords = {110, 110, 246, 249};
 
@@ -81,7 +70,6 @@ public class PlayScreen implements Screen {
         gamecam = new OrthographicCamera();
         gamePort = new FillViewport(OBEY.V_WIDTH / OBEY.PPM, OBEY.V_HEIGHT / OBEY.PPM, gamecam);
         hud = new Hud(game.batch);
-        //Gdx.files.internal("/android/assets");
 
         maploader = new TmxMapLoader();
         map = maploader.load("first_level_test_5.tmx");
@@ -90,7 +78,7 @@ public class PlayScreen implements Screen {
 
         world = new World(new Vector2(0, -40), true);
         b2dr = new Box2DDebugRenderer(false, false, false, true, false, false);
-        //b2dr = new Box2DDebugRenderer();
+        //  b2dr = new Box2DDebugRenderer();    Uncomment for debug collisions, etc.
 
         player = new MainCharacter(this, 1400 / OBEY.PPM, 830 / OBEY.PPM);
 
@@ -121,7 +109,7 @@ public class PlayScreen implements Screen {
     }
 
     public void handleInput(float dt){
-        //handle double click which is calling pause menu
+        //  handle double click which is calling pause menu
         if (Gdx.input.justTouched()){
             Gdx.app.log("touch " + countOfLastTouches, "" + hud.getWorldTimer());
             if (TimeOfLastTouch == 0) {
@@ -129,7 +117,7 @@ public class PlayScreen implements Screen {
                 countOfLastTouches = 1;
             }
             else{
-                if ((countOfLastTouches == 1) && ((3 <= (hud.getWorldTimer() - TimeOfLastTouch)) && ((hud.getWorldTimer() - TimeOfLastTouch) <= 20))){
+                if ((countOfLastTouches == 1) && ((0.05 <= (hud.getWorldTimer() - TimeOfLastTouch)) && ((hud.getWorldTimer() - TimeOfLastTouch) <= 0.1))){
                     OBEY.manager.get(OBEY.SOUND_CLICK_PATH, Sound.class).play();
                     Gdx.app.log("double click", "");
                     game.StateOfGame = OBEY.State.PAUSE;
@@ -139,7 +127,7 @@ public class PlayScreen implements Screen {
                     pause();
 
                 }
-                else if (3 <= (hud.getWorldTimer() - TimeOfLastTouch)){
+                else if (0.1 <= (hud.getWorldTimer() - TimeOfLastTouch)){
                     countOfLastTouches = 1;
                     TimeOfLastTouch = hud.getWorldTimer();
                 }
@@ -147,9 +135,6 @@ public class PlayScreen implements Screen {
                     countOfLastTouches = 0;
             }
         }
-        /*if ((countOfLastTouches == 1) && (20 <= (hud.getWorldTimer() - TimeOfLastTouch))){
-            countOfLastTouches = 0;
-        }*/
 
         if ((Gdx.input.isKeyPressed(Input.Keys.UP) || (Gdx.input.isTouched() && (countOfLastTouches == 1) && (Gdx.input.getX() > Gdx.graphics.getWidth() / 4) && (Gdx.input.getX() < 3 * Gdx.graphics.getWidth() / 4))) && (player.b2body.getLinearVelocity().y == 0) && !isPlayersHeadCollidesWall)
             player.b2body.applyLinearImpulse(new Vector2(0, 80), player.b2body.getWorldCenter(), true);
@@ -168,13 +153,13 @@ public class PlayScreen implements Screen {
 
         //  Gravity change if user pushed "space" button or swiped corresponding down or up.
         //  Also, between two gravity changes must be a defined delay
-        Gdx.app.log(" Swipe y: " +  Gdx.input.getDeltaY(), " " + Gdx.graphics.getHeight() + " " + world.getGravity().y);
+        Gdx.app.log(" Swipe y: " +  TimeOfLastSpacePress, " " + hud.getWorldTimer());
         if ((Gdx.input.isTouched() && (((-Gdx.input.getDeltaY() > (Gdx.graphics.getHeight() / 25)) && (world.getGravity().y <= 0)) || ((Gdx.input.getDeltaY() > (Gdx.graphics.getHeight() / 25)) && (world.getGravity().y >= 0)))) || Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
             Gdx.app.log("Space", "Before: " + TimeOfLastSpacePress + " After: " + hud.getWorldTimer());
             //  flush the counter of clicks because that's swipe
             if (Gdx.input.isTouched() && (((Gdx.input.getDeltaY() > (Gdx.graphics.getHeight() / 25)) && (world.getGravity().y <= 0)) || ((-Gdx.input.getDeltaY() > (Gdx.graphics.getHeight() / 25)) && (world.getGravity().y >= 0))))
                 countOfLastTouches = 0;
-            if (TimeOfLastSpacePress == 0 || ((hud.getWorldTimer() - TimeOfLastSpacePress) >= 42)) {
+            if (TimeOfLastSpacePress == 0 || ((hud.getWorldTimer() - TimeOfLastSpacePress) >= 0.8)) {
                 Gdx.app.log("Space", "Pressed");
 
                 world.setGravity(new Vector2(world.getGravity().x, world.getGravity().y * -1));

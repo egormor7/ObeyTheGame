@@ -6,14 +6,12 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.utils.Array;
 import com.egormor.obey.OBEY;
 import com.egormor.obey.Screens.PlayScreen;
-//import org.apache.common.lang3.ArrayUtils;
 
 public class RobotEnemy extends Enemy{
     public enum State { FALLING, JUMPING, STANDING, RUNNING};
@@ -77,9 +75,10 @@ public class RobotEnemy extends Enemy{
 
         TextureRegion region;
         switch (currentState) {
-            //case JUMPING:
-            //region = mainCharacterJump.getKeyFrame(stateTimer);
-            //break;
+            //  Uncomment when jump animation added
+            /*case JUMPING:
+            region = mainCharacterJump.getKeyFrame(stateTimer);
+            break;*/
             case RUNNING:
                 region = walkAnimation.getKeyFrame(stateTime, true);
                 break;

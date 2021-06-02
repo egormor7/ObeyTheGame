@@ -4,12 +4,6 @@ import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.World;
-import com.egormor.obey.OBEY;
 import com.egormor.obey.Screens.PlayScreen;
 import com.egormor.obey.Sprites.Brick;
 import com.egormor.obey.Sprites.Laser;
@@ -19,12 +13,7 @@ public class B2WorldCreator {
     private TiledMap map;
 
     public B2WorldCreator(PlayScreen screen){
-        //World world = screen.getWorld();
         map = screen.getMap();
-        /*BodyDef bdef = new BodyDef();
-        PolygonShape shape = new PolygonShape();
-        FixtureDef fdef = new FixtureDef();
-        Body body;*/
 
         //  create walls bodies/fixtures for other objects the same cycle
         for (MapObject object: map.getLayers().get(3).getObjects().getByType(RectangleMapObject.class)){
