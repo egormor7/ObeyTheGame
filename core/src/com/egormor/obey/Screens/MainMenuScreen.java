@@ -2,6 +2,7 @@ package com.egormor.obey.Screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.MapObject;
@@ -73,7 +74,6 @@ public class MainMenuScreen implements Screen {
             y_start_height = rect_start_button.getHeight() / OBEY.PPM;
         }
 
-
         for (MapObject object: map.getLayers().get(3).getObjects().getByType(RectangleMapObject.class)){
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
@@ -102,27 +102,31 @@ public class MainMenuScreen implements Screen {
             touchPoint.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             gamecam.unproject(touchPoint);
 
+            //  if pressed "play" button music and screen switches from current to play screen
             if (isInSquare(touchPoint.x, touchPoint.y, x_start, y_start, x_start_width, y_start_height)) {
+                OBEY.manager.get(OBEY.SOUND_CLICK_PATH, Sound.class).play();
                 game.StateOfGame = OBEY.State.GAME;
-                game.play_screen = new PlayScreen(game);
-                game.setScreen(game.play_screen);
+                game.playScreen = new PlayScreen(game);
+                game.setScreen(game.playScreen);
                 game.disposeCurrentMusic();
                 game.setMusic(OBEY.PLAY_SCREEN_MUSIC_PATH);
                 dispose();
             }
+            //  if pressed "exit" button then everything is disposing
             else if (isInSquare(touchPoint.x, touchPoint.y, x_exit, y_exit, x_exit_width, y_exit_height)){
+                OBEY.manager.get(OBEY.SOUND_CLICK_PATH, Sound.class).play();
                 Gdx.app.log("exit button", "Coordinates: ");
                 dispose();
+                game.dispose();
                 Gdx.app.exit();
                 System.exit(0);
             }
         }
     }
 
+    //  function checks if (x1 ; y1) is in rectangle (x2; y2; x2 + width; y2 + height)
     public boolean isInSquare(float x1, float y1, float x2, float y2, float width, float height){
-        if ((x1 >= x2) && (x1 <= (x2 + width)) && (y1 >= y2) && (y1 <= (y2 + height)))
-            return true;
-        return false;
+        return (x1 >= x2) && (x1 <= (x2 + width)) && (y1 >= y2) && (y1 <= (y2 + height));
     }
 
     @Override

@@ -16,13 +16,15 @@ import com.egormor.obey.Sprites.Laser;
 import com.egormor.obey.Sprites.Wall;
 
 public class B2WorldCreator {
+    private TiledMap map;
+
     public B2WorldCreator(PlayScreen screen){
-        World world = screen.getWorld();
-        TiledMap map = screen.getMap();
-        BodyDef bdef = new BodyDef();
+        //World world = screen.getWorld();
+        map = screen.getMap();
+        /*BodyDef bdef = new BodyDef();
         PolygonShape shape = new PolygonShape();
         FixtureDef fdef = new FixtureDef();
-        Body body;
+        Body body;*/
 
         //  create walls bodies/fixtures for other objects the same cycle
         for (MapObject object: map.getLayers().get(3).getObjects().getByType(RectangleMapObject.class)){

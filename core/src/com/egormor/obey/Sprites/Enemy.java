@@ -5,7 +5,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.egormor.obey.Screens.PlayScreen;
 
-public abstract class Enemy extends Sprite {
+public abstract class Enemy extends Sprite{
     protected World world;
     protected PlayScreen screen;
     public Body b2body;

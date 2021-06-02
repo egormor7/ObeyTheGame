@@ -3,6 +3,7 @@ package com.egormor.obey.Screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.MapObject;
@@ -30,7 +31,6 @@ public class PauseMenuScreen implements Screen {
     private OrthogonalTiledMapRenderer renderer;
 
     private World world;
-    private PlayScreen playScreen;
 
     protected Fixture fixture;
 
@@ -46,8 +46,6 @@ public class PauseMenuScreen implements Screen {
 
     public PauseMenuScreen(OBEY game) {
         this.game = game;
-        //this.playScreen = playScreen;
-
 
         gamecam = new OrthographicCamera();
         gamePort = new FillViewport(OBEY.MENU_WIDTH / OBEY.PPM, OBEY.MENU_HEIGHT / OBEY.PPM, gamecam);
@@ -111,25 +109,28 @@ public class PauseMenuScreen implements Screen {
             touchPoint.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             gamecam.unproject(touchPoint);
 
+            //  if pressed "play" button music and screen switches from current to play screen
             if (isInSquare(touchPoint.x, touchPoint.y, x_continue, y_continue, x_continue_width, y_continue_height)) {
+                OBEY.manager.get(OBEY.SOUND_CLICK_PATH, Sound.class).play();
                 game.StateOfGame = OBEY.State.GAME;
-                game.setScreen(game.play_screen);
+                game.setScreen(game.playScreen);
                 game.unPauseCurrentMusic();
                 dispose();
             }
+            //  if pressed "go to menu" button music and screen switches from current to main menu screen
             else if (isInSquare(touchPoint.x, touchPoint.y, x_menu, y_menu, x_menu_width, y_menu_height)){
+                OBEY.manager.get(OBEY.SOUND_CLICK_PATH, Sound.class).play();
                 game.StateOfGame = OBEY.State.MAIN_MENU;
-                game.setScreen(game.main_menu_screen);
+                game.setScreen(game.mainMenuScreen);
                 game.setMusic(OBEY.MAIN_MENU_SCREEN_MUSIC_PATH);
                 dispose();
             }
         }
     }
 
+    //  function checks if (x1 ; y1) is in rectangle (x2; y2; x2 + width; y2 + height)
     public boolean isInSquare(float x1, float y1, float x2, float y2, float width, float height){
-        if ((x1 >= x2) && (x1 <= (x2 + width)) && (y1 >= y2) && (y1 <= (y2 + height)))
-            return true;
-        return false;
+        return (x1 >= x2) && (x1 <= (x2 + width)) && (y1 >= y2) && (y1 <= (y2 + height));
     }
 
     @Override

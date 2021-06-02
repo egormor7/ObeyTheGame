@@ -25,15 +25,20 @@ public class Laser extends InteractiveTileObject{
 
     @Override
     public void onHandHit() {
-        Gdx.app.log("Laser", "Collision");
+        OBEY.manager.get(OBEY.SOUND_LASER_KILL_PATH, Sound.class).play();
         screen.game_over = true;
-        /*OBEY game = screen.getGame();
-        game.setScreen(new GameOverScreen(game));
-        screen.dispose();*/
-        //setCategoryFilter(OBEY.DESTROYED_BIT);
-        //deleteCells();
-        //Hud.addScore(-200);
-
-        //OBEY.manager.get(OBEY.SOUND_BREAK_BLOCK_PATH, Sound.class).play();
     }
+
+    @Override
+    public void onHeadHit() {
+        OBEY.manager.get(OBEY.SOUND_LASER_KILL_PATH, Sound.class).play();
+        screen.game_over = true;
+    }
+
+    @Override
+    public void onBottomHit() {
+        OBEY.manager.get(OBEY.SOUND_LASER_KILL_PATH, Sound.class).play();
+        screen.game_over = true;
+    }
+
 }

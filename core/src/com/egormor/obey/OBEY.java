@@ -38,18 +38,25 @@ public class OBEY extends Game {
 	public State StateOfGame;
 
 	private Music music;
-	public static final String PLAY_SCREEN_MUSIC_PATH = "audio/music/tunetank.com_1746_abandoned-factory_by_finval.mp3";	//https://tunetank.com/t/1bpr/4063-they-will-come-for-us
+	public static final String PLAY_SCREEN_MUSIC_PATH = "audio/music/tunetank.com_1746_abandoned-factory_by_finval.mp3";
 	public static final String MAIN_MENU_SCREEN_MUSIC_PATH = "audio/music/tunetank.com_4063_they-will-come-for-us_by_rage-sound.mp3";
 	public static final String GAME_OVER_SCREEN_MUSIC_PATH = "audio/music/tunetank.com_1735_ocean-floor_by_finval.mp3";
 	public static final String PAUSE_MENU_SCREEN_MUSIC_PATH = "audio/music/tunetank.com_3629_calm-place_by_finval.mp3";
-	public static final String SOUND_BREAK_BLOCK_PATH = "audio/sounds/android_assets_audio_sounds_breakblock.wav";	//https://tunetank.com/track/1746-abandoned-factory
+	public static final String SOUND_BREAK_BLOCK_PATH = "audio/sounds/android_assets_audio_sounds_breakblock.wav";
+	public static final String SOUND_LASER_KILL_PATH = "audio/sounds/laser_kill.mp3";
+    public static final String SOUND_CLICK_PATH = "audio/sounds/click.mp3";
+	public static final String SOUND_ROBOT_ENEMY_KILL_PATH = "audio/sounds/robotenemyKill.mp3";
 
-	//https://tunetank.com/t/1bpr/1735-ocean-floor
 
 	public SpriteBatch batch;
 	public BitmapFont font;
 
-	public Screen game_over_screen, pause_menu_screen, main_menu_screen, play_screen;
+	//	Every possible screen in the game
+	public GameOverScreen gameOverScreen;
+	public PauseMenuScreen pauseMenuScreen;
+	public MainMenuScreen mainMenuScreen;
+	public PlayScreen playScreen;
+
 
 	public static AssetManager manager;
 	@Override
@@ -57,26 +64,30 @@ public class OBEY extends Game {
 		batch = new SpriteBatch();
 		font = new BitmapFont();
 
+		//	Loading every music / sound that using in the game
 		manager = new AssetManager();
 		manager.load(PLAY_SCREEN_MUSIC_PATH, Music.class);
 		manager.load(MAIN_MENU_SCREEN_MUSIC_PATH, Music.class);
 		manager.load(GAME_OVER_SCREEN_MUSIC_PATH, Music.class);
 		manager.load(PAUSE_MENU_SCREEN_MUSIC_PATH, Music.class);
         manager.load(SOUND_BREAK_BLOCK_PATH, Sound.class);
+        manager.load(SOUND_CLICK_PATH, Sound.class);
+		manager.load(SOUND_LASER_KILL_PATH, Sound.class);
+		manager.load(SOUND_ROBOT_ENEMY_KILL_PATH, Sound.class);
         manager.finishLoading();
 
-		//setScreen(new PlayScreen(this));
 		StateOfGame = State.MAIN_MENU;
 
-		game_over_screen = new GameOverScreen(this);
-		main_menu_screen = new MainMenuScreen(this);
-		play_screen = new PlayScreen(this);
-		pause_menu_screen = new PauseMenuScreen(this);
+		//	Creating every possible screen in the game.
+		//	That's optimization, because screens creating once, at begin of the game.
+		//	(Except PlayScreen, which is recreating when user starts new game or when he dies)
+		gameOverScreen = new GameOverScreen(this);
+		mainMenuScreen = new MainMenuScreen(this);
+		playScreen = new PlayScreen(this);
+		pauseMenuScreen = new PauseMenuScreen(this);
 
 		setMusic(MAIN_MENU_SCREEN_MUSIC_PATH);
-		setScreen(main_menu_screen);
-		//Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer(true, true, false, true, false, true);
-
+		setScreen(mainMenuScreen);
 	}
 
 	public void setMusic(String path){

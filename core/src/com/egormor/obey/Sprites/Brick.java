@@ -24,4 +24,20 @@ public class Brick extends InteractiveTileObject{
         deleteCells();
         OBEY.manager.get(OBEY.SOUND_BREAK_BLOCK_PATH, Sound.class).play();
     }
+
+    @Override
+    public void onHeadHit() {
+        Gdx.app.log("Brick", "Collision");
+        setCategoryFilter(OBEY.DESTROYED_BIT);
+        deleteCells();
+        OBEY.manager.get(OBEY.SOUND_BREAK_BLOCK_PATH, Sound.class).play();
+    }
+
+    @Override
+    public void onBottomHit() {
+        Gdx.app.log("Brick", "Collision");
+        setCategoryFilter(OBEY.DESTROYED_BIT);
+        deleteCells();
+        OBEY.manager.get(OBEY.SOUND_BREAK_BLOCK_PATH, Sound.class).play();
+    }
 }

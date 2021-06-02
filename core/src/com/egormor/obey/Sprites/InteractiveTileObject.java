@@ -1,6 +1,7 @@
 package com.egormor.obey.Sprites;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -15,10 +16,9 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.egormor.obey.OBEY;
 import com.egormor.obey.Screens.PlayScreen;
 
-public abstract class InteractiveTileObject {
+public abstract class InteractiveTileObject{
     protected World world;
     protected TiledMap map;
-    protected TiledMapTile tile;
     protected Rectangle bounds;
     protected Body body;
 
@@ -45,6 +45,8 @@ public abstract class InteractiveTileObject {
     }
 
     public abstract void onHandHit();
+    public abstract void onHeadHit();
+    public abstract void onBottomHit();
 
     public void setCategoryFilter(short filterBit){
         Filter filter = new Filter();
@@ -56,10 +58,6 @@ public abstract class InteractiveTileObject {
     //  !!! now deletes only bricks
     public void deleteCells(){
         TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get(1);
-        Gdx.app.log(" " + layer.getWidth(), " " + layer.getHeight());
-
-
-        Gdx.app.log("" + (int)(body.getPosition().x * OBEY.PPM / OBEY.TILE_SIZE - bounds.getWidth() / OBEY.TILE_SIZE / 2) + " " + (int)(body.getPosition().x * OBEY.PPM / OBEY.TILE_SIZE + bounds.getWidth() / OBEY.TILE_SIZE / 2), "" + (int)(body.getPosition().y * OBEY.PPM / OBEY.TILE_SIZE - bounds.getHeight() / OBEY.TILE_SIZE / 2) + " " + (int)(body.getPosition().y * OBEY.PPM / OBEY.TILE_SIZE + bounds.getHeight() / OBEY.TILE_SIZE / 2));
         for (int i = (int)(body.getPosition().x * OBEY.PPM / OBEY.TILE_SIZE - bounds.getWidth() / OBEY.TILE_SIZE / 2);
              i<=(int)(body.getPosition().x * OBEY.PPM / OBEY.TILE_SIZE + bounds.getWidth() / OBEY.TILE_SIZE / 2); i++){
             for (int j = (int)(body.getPosition().y * OBEY.PPM / OBEY.TILE_SIZE - bounds.getHeight() / OBEY.TILE_SIZE / 2);

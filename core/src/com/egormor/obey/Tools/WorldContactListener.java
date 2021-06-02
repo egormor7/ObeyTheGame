@@ -8,6 +8,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.egormor.obey.Sprites.Enemy;
 import com.egormor.obey.Sprites.InteractiveTileObject;
+import com.egormor.obey.Sprites.Wall;
 
 public class WorldContactListener implements ContactListener {
 
@@ -30,6 +31,11 @@ public class WorldContactListener implements ContactListener {
             }
 
             if (object.getUserData() != null && InteractiveTileObject.class.isAssignableFrom(object.getUserData().getClass())){
+                if ("right_hand".equals(hand.getUserData()) && Wall.class.isAssignableFrom(object.getUserData().getClass()))
+                    ((Wall) object.getUserData()).onRightHandHit();
+                if ("left_hand".equals(hand.getUserData()) && Wall.class.isAssignableFrom(object.getUserData().getClass()))
+                    ((Wall) object.getUserData()).onLeftHandHit();
+
                 ((InteractiveTileObject) object.getUserData()).onHandHit();
             }
             if (object.getUserData() != null && Enemy.class.isAssignableFrom(object.getUserData().getClass())){
@@ -37,10 +43,29 @@ public class WorldContactListener implements ContactListener {
             }
         }
 
-        if ("head".equals(fixA.getUserData()) || "head".equals(fixB.getUserData()) || "bottom".equals(fixA.getUserData()) || "bottom".equals(fixB.getUserData())){
-            Gdx.app.log("Head/Bottom", "collision");
+        if ("head".equals(fixA.getUserData()) || "head".equals(fixB.getUserData())) {
+            Gdx.app.log("Head", "collision");
             Fixture hand, object;
-            if ("head".equals(fixA.getUserData()) || "bottom".equals(fixA.getUserData())){
+            if ("head".equals(fixA.getUserData())) {
+                hand = fixA;
+                object = fixB;
+            } else {
+                hand = fixB;
+                object = fixA;
+            }
+
+            if (object.getUserData() != null && Enemy.class.isAssignableFrom(object.getUserData().getClass())) {
+                ((Enemy) object.getUserData()).onHeadBottomHit();
+            }
+            if (object.getUserData() != null && InteractiveTileObject.class.isAssignableFrom(object.getUserData().getClass())) {
+                ((InteractiveTileObject) object.getUserData()).onHeadHit();
+            }
+        }
+
+        if ("bottom".equals(fixA.getUserData()) || "bottom".equals(fixB.getUserData())){
+            Gdx.app.log("Bottom", "collision");
+            Fixture hand, object;
+            if ("bottom".equals(fixA.getUserData())){
                 hand = fixA;
                 object = fixB;
             }
@@ -52,12 +77,47 @@ public class WorldContactListener implements ContactListener {
             if (object.getUserData() != null && Enemy.class.isAssignableFrom(object.getUserData().getClass())){
                 ((Enemy) object.getUserData()).onHeadBottomHit();
             }
+            if (object.getUserData() != null && InteractiveTileObject.class.isAssignableFrom(object.getUserData().getClass())) {
+                ((InteractiveTileObject) object.getUserData()).onBottomHit();
+            }
         }
     }
 
     @Override
     public void endContact(Contact contact) {
+        Fixture fixA = contact.getFixtureA();
+        Fixture fixB = contact.getFixtureB();
+        if ("right_hand".equals(fixA.getUserData()) || "right_hand".equals(fixB.getUserData())){
+            Fixture hand, object;
+            if ("right_hand".equals(fixA.getUserData())){
+                hand = fixA;
+                object = fixB;
+            }
+            else{
+                hand = fixB;
+                object = fixA;
+            }
 
+            if (object.getUserData() != null && Wall.class.isAssignableFrom(object.getUserData().getClass())){
+                ((Wall) object.getUserData()).onEndRightHandHit();
+            }
+        }
+
+        if ("left_hand".equals(fixA.getUserData()) || "left_hand".equals(fixB.getUserData())){
+            Fixture hand, object;
+            if ("left_hand".equals(fixA.getUserData())){
+                hand = fixA;
+                object = fixB;
+            }
+            else{
+                hand = fixB;
+                object = fixA;
+            }
+
+            if (object.getUserData() != null && Wall.class.isAssignableFrom(object.getUserData().getClass())){
+                ((Wall) object.getUserData()).onEndLeftHandHit();
+            }
+        }
     }
 
     @Override

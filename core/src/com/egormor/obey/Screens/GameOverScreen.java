@@ -2,7 +2,7 @@ package com.egormor.obey.Screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.MapObject;
@@ -31,8 +31,6 @@ public class GameOverScreen implements Screen {
 
     private World world;
 
-    private Music music;
-
     protected Fixture fixture;
 
     private Float x_try_again, y_try_again, x_try_again_width, y_try_again_height;
@@ -42,7 +40,7 @@ public class GameOverScreen implements Screen {
 
     public GameOverScreen(OBEY game) {
         this.game = game;
-        Gdx.app.log("4", "Pressed");
+
         gamecam = new OrthographicCamera();
         gamePort = new FillViewport(OBEY.MENU_WIDTH / OBEY.PPM, OBEY.MENU_HEIGHT / OBEY.PPM, gamecam);
 
@@ -79,6 +77,7 @@ public class GameOverScreen implements Screen {
     public void render(float delta) {
         if (game.StateOfGame != OBEY.State.GAME_OVER)
             return;
+
         gamecam.update();
         renderer.setView(gamecam);
 
@@ -91,18 +90,21 @@ public class GameOverScreen implements Screen {
         if (Gdx.input.justTouched()) {
             touchPoint.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             gamecam.unproject(touchPoint);
-
+            //  if pressed "go to main menu" button music and screen switches from current to main menu
             if (isInSquare(touchPoint.x, touchPoint.y, x_menu, y_menu, x_menu_width, y_menu_height)) {
+                OBEY.manager.get(OBEY.SOUND_CLICK_PATH, Sound.class).play();
                 game.StateOfGame = OBEY.State.MAIN_MENU;
-                game.setScreen(game.main_menu_screen);
+                game.setScreen(game.mainMenuScreen);
                 game.disposeCurrentMusic();
                 game.setMusic(OBEY.MAIN_MENU_SCREEN_MUSIC_PATH);
                 dispose();
             }
+            //  if pressed "play" button music and screen switches from current to play screen
             else if (isInSquare(touchPoint.x, touchPoint.y, x_try_again, y_try_again, x_try_again_width, y_try_again_height)){
+                OBEY.manager.get(OBEY.SOUND_CLICK_PATH, Sound.class).play();
                 game.StateOfGame = OBEY.State.GAME;
-                game.play_screen = new PlayScreen(game);
-                game.setScreen(game.play_screen);
+                game.playScreen = new PlayScreen(game);
+                game.setScreen(game.playScreen);
                 game.disposeCurrentMusic();
                 game.setMusic(OBEY.PLAY_SCREEN_MUSIC_PATH);
                 dispose();
@@ -110,10 +112,9 @@ public class GameOverScreen implements Screen {
         }
     }
 
+    //  function checks if (x1 ; y1) is in rectangle (x2; y2; x2 + width; y2 + height)
     public boolean isInSquare(float x1, float y1, float x2, float y2, float width, float height){
-        if ((x1 >= x2) && (x1 <= (x2 + width)) && (y1 >= y2) && (y1 <= (y2 + height)))
-            return true;
-        return false;
+        return (x1 >= x2) && (x1 <= (x2 + width)) && (y1 >= y2) && (y1 <= (y2 + height));
     }
 
     @Override
